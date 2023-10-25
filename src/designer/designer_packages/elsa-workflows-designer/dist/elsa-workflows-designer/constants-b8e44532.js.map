@@ -1,0 +1,1 @@
+{"file":"constants-b8e44532.js","mappings":"MAAa,+BAA+B,GAAG;;;;","names":[],"sources":["./src/modules/workflow-contexts/constants.ts"],"sourcesContent":["export const WorkflowContextProviderTypesKey = 'Elsa:WorkflowContextProviderTypes';\r\n"],"version":3}

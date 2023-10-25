@@ -1,0 +1,36 @@
+import 'reflect-metadata';
+import { Plugin } from "../../../models";
+import { WorkflowDefinition } from "../models/entities";
+import { PublishClickedArgs } from "../components/publish-button";
+export declare class WorkflowDefinitionsPlugin implements Plugin {
+  private readonly eventBus;
+  private readonly workflowDefinitionManager;
+  private readonly workflowDefinitionEditorService;
+  private readonly modalDialogService;
+  private readonly activityDescriptorManager;
+  private api;
+  private workflowDefinitionEditorElement;
+  private workflowDefinitionBrowserInstance;
+  private inputControlRegistry;
+  private workflowDefinitionEditorInstance;
+  private readonly workflowInstancesApi;
+  private workflowInstanceBrowserInstance;
+  constructor();
+  initialize(): Promise<void>;
+  newWorkflow: () => Promise<void>;
+  private getFlowchartDescriptor;
+  private getActivityDescriptor;
+  private generateUniqueActivityName;
+  showWorkflowDefinitionEditor: (workflowDefinition: WorkflowDefinition) => void;
+  private import;
+  private onNewWorkflowDefinitionSelected;
+  private onImportWorkflowDefinitionClick;
+  private onBrowseWorkflowDefinitions;
+  private onWorkflowDefinitionSelected;
+  private onWorkflowInstancesSelected;
+  publishCurrentWorkflow: (args: PublishClickedArgs) => Promise<void>;
+  private onPublishClicked;
+  private updateCompositeActivityReferences;
+  private onWorkflowInstanceSelected;
+  private showWorkflowInstanceViewer;
+}

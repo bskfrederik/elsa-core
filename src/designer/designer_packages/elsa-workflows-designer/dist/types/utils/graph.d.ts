@@ -1,0 +1,11 @@
+import { Edge, Graph, Node } from "@antv/x6";
+import { Connection } from "../modules/flowchart/models";
+import { Activity } from "../models";
+export declare function rebuildGraph(graph: Graph): void;
+export declare function autoOrientConnections(graph: Graph, selectedNode: Node): void;
+export declare function getPortNameByPortId(portId: string): string;
+export declare function deriveNewPortId(portId: string): string;
+export declare function adjustPortMarkupByNode(node: Node): void;
+export declare function createEdge(connection: Connection): Edge.Metadata;
+export declare function removeGuidsFromPortNames(root: Activity): void;
+export declare function addGuidsToPortNames(root: Activity): void;
