@@ -1,0 +1,12 @@
+{
+  "editOutputDefinition": "Edit Output Definition",
+  "outputName": "Output Name",
+  "outputNameHint": "The technical name of the output.",
+  "outputType": "Output Type",
+  "outputTypeHint": "The type of the output.",
+  "outputDisplayName": "Output Display Name",
+  "outputDisplayNameHint": "The display name of the output.",
+  "outputDescription": "Output Description",
+  "outputDescriptionHint": "The description of the output."
+
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"models.js","sourceRoot":"","sources":["../../../../src/components/shared/button-group/models.ts"],"names":[],"mappings":"","sourcesContent":["﻿export interface Button {\r\n  text: string;\r\n  clickHandler?: (e: MouseEvent) => void;\r\n}\r\n"]}

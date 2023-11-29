@@ -1,0 +1,1 @@
+{"version":3,"file":"models.js","sourceRoot":"","sources":["../../../../src/modules/http-request/flow/models.ts"],"names":[],"mappings":"","sourcesContent":["import {Activity, ActivityInput} from \"../../../models\";\r\n\r\nexport interface FlowSendHttpRequest extends Activity {\r\n  expectedStatusCodes: ActivityInput;\r\n}\r\n"]}

@@ -1,0 +1,2 @@
+import{h as t}from"./p-a7a3baa1.js";import{H as l}from"./p-ec4413cd.js";const a=({label:a,hint:e,fieldId:s,key:d,padding:i},r)=>{i!==null&&i!==void 0?i:i="tw-p-4";return t("div",{class:`form-entry ${i}`},t("label",{htmlFor:s},a),t("div",{class:"tw-mt-1",key:d},r),t(l,{text:e}))};const e=({label:a,hint:e,fieldId:s,key:d,padding:i},r)=>{i!==null&&i!==void 0?i:i="tw-p-4";return t("div",{class:i},t("div",{class:"tw-flex tw-space-x-1"},r,t("label",{htmlFor:s},a)),t(l,{text:e}))};export{e as C,a as F};
+//# sourceMappingURL=p-b15e4c38.js.map

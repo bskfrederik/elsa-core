@@ -1,0 +1,29 @@
+{
+  "propertiesTab": "Properties",
+  "variablesTab": "Variables",
+  "settingsTab": "Settings",
+  "inputOutputTab": "Input / Output",
+  "versionHistoryTab": "Version History",
+  "propertiesWorkflowName": "Name",
+  "propertiesWorkflowNameHint": "The name of the workflow",
+  "propertiesWorkflowDescription": "Description",
+  "propertiesWorkflowDescriptionHint": "A brief description about the workflow.",
+  "propertiesDefitionId": "Definition ID",
+  "propertiesVersionId": "Version ID",
+  "propertiesVersion": "Version",
+  "propertiesStatus": "Status",
+  "propertiesReadOnly": "Readonly",
+  "propertiesNew": "(new)",
+  "propertiesPublished": "Published",
+  "propertiesDraft": "Draft",
+  "propertiesYes": "Yes",
+  "propertiesNo": "No",
+  "settingsActivitationStrategy": "Activation Strategy",
+  "settingsUsableAsActivity": "Usable as Activity",
+  "settingsUsableAsActivityHint": "Allow this workflow to be used as an activity.",
+  "settingsAutoUpdateConsumingWorkflows": "Auto Update Consuming Workflows",
+  "settingsAutoUpdateConsumingWorkflowsHint": "When you publish a new version, all of the consuming workflows will be updated to point to the new version of this workflow."
+
+
+
+}

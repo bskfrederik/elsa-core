@@ -1,0 +1,15 @@
+{
+  "generalTab": "General",
+  "settingsTab": "Settings",
+  "outputTab": "Output",
+  "taskTab": "Task",
+  "activityId": "ID",
+  "activityHint": "The ID of the activity",
+  "activityDisplayText": "Display Text",
+  "activityDisplayHint": "The text to display on the activity in the designer.",
+  "activityCanStartWorkflow":"Can Start Workflow",
+  "activityCanStartWorkflowHint":"When enabled, this activity can be used as a trigger to automatically start the workflow.",
+  "taskExecuteAsynchronously": "Execute Asynchronously",
+  "taskExecuteAsynchronouslyHint": "When enabled, this activity will execute asynchronously and suspend workflow execution until the activity is finished."
+
+}

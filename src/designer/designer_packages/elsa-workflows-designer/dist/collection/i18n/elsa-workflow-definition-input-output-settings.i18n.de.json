@@ -1,0 +1,15 @@
+{
+  "inputsLabel": "Eingaben",
+  "inputName": "Name",
+  "inputType": "Typ",
+  "addInputButton": "Eingabeparameter hinzufügen",
+  "outputLabel": "Ausgaben",
+  "outputName": "Name",
+  "outputType": "Typ",
+  "addOutputButton": "Ausgabeparameter hinzufügen",
+  "labelOutcome": "Ergebnisse",
+  "placeholderOutcome": "Ergebniswert eingeben",
+  "outcomeHint": "Eine Liste an möglichen Ergebnissen",
+  "editButton": "Bearbeiten",
+  "deleteButton": "Löschen"
+}

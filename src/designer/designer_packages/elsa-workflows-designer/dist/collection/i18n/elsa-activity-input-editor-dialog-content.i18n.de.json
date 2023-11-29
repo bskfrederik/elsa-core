@@ -1,0 +1,19 @@
+{
+  "editInputConfiguration": "Eingabe konfigurieren",
+  "inputName": "Name",
+  "inputNameHint": "Der Name der Eingabe.",
+  "inputType": "Typ",
+  "inputTypeHint": "Der Typ der Eingabe.",
+  "arrayInputLabel": "Array Eingabe",
+  "arrayInputHint": "Die Eingabe ist eine Liste.",
+  "displayNameLabel": "Anzeigename",
+  "displayNameHint": "Ein natürlichsprachlicher Name für die Eingabe.",
+  "inputDescriptionLabel": "Beschreibung",
+  "inputDescriptionHint": "",
+  "inputCategoryLabel": "Kategorie",
+  "inputCategoryHint": "",
+  "controlLabel": "Eingabetyp",
+  "controlHint": "",
+  "storageLabel": "Speicherort",
+  "storageHint": ""
+}

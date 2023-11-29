@@ -1,0 +1,2 @@
+import{h as r}from"./p-a7a3baa1.js";import{c as e}from"./p-37e9f5c1.js";const o=e({workflowDefinitionId:null,activityType:null,propertyName:null},((e,o)=>r("context-consumer",{subscribe:e,renderer:o})));export{o as I};
+//# sourceMappingURL=p-e7fbf459.js.map

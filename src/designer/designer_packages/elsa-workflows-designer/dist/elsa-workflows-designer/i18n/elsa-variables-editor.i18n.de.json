@@ -1,0 +1,8 @@
+{
+  "saveAction": "Speichern",
+  "columName": "Name",
+  "columnType": "Typ",
+  "columStorage": "Speicherort",
+  "variableEditButton": "Bearbeiten",
+  "variableDeleteButton": "Löschen"
+}

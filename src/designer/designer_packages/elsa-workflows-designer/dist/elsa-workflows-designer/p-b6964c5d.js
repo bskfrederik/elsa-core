@@ -1,0 +1,2 @@
+import{c as t}from"./p-144a434e.js";const{state:r,onChange:s}=t({activityDescriptors:[],storageDrivers:[],variableDescriptors:[],workflowActivationStrategyDescriptors:[],installedFeatures:[]});export{r as s};
+//# sourceMappingURL=p-b6964c5d.js.map

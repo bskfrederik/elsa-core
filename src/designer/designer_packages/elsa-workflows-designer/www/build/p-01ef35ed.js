@@ -1,0 +1,2 @@
+import{c as r}from"./p-37e9f5c1.js";import{h as e}from"./p-a7a3baa1.js";const o=r({nodeMap:{}},((r,o)=>e("context-consumer",{subscribe:r,renderer:o})));export{o as F};
+//# sourceMappingURL=p-01ef35ed.js.map

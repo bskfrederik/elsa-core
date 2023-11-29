@@ -1,0 +1,13 @@
+{
+  "editVariable": "Variable bearbeiten",
+  "labelName": "Name",
+  "nameHint": "Der technische Name der Variable",
+  "labelType": "Typ",
+  "typeHint": "Der Datentyp der Variable",
+  "labelArray": "Repräsentiert ein Array",
+  "arrayHint": "Der Typ Variable ist eine Liste von Werten.",
+  "labelValue": "Wert",
+  "valueHint": "Der Wert der Variable",
+  "labelStorage": "Speicher",
+  "storageHint": "Speicherort der Variable"
+}

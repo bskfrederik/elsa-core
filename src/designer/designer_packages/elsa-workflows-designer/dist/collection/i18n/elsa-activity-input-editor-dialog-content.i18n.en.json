@@ -1,0 +1,19 @@
+{
+  "editInputConfiguration": "Edit Input Configuration",
+  "inputName": "Name",
+  "inputNameHint": "The technical name of the input.",
+  "inputType": "Type",
+  "inputTypeHint": "The type of the input.",
+  "arrayInputLabel": "Array Input",
+  "arrayInputHint": "Check if the input holds an array of the selected type.",
+  "displayNameLabel": "Display Name",
+  "displayNameHint": "The user friendly display name of the input.",
+  "inputDescriptionLabel": "Description",
+  "inputDescriptionHint": "The description of the input.",
+  "inputCategoryLabel": "Category",
+  "inputCategoryHint": "The category of the input.",
+  "controlLabel": "Control",
+  "controlHint": "The control used to edit the input.",
+  "storageLabel": "Storage",
+  "storageHint": "The storage used to store the input."
+}

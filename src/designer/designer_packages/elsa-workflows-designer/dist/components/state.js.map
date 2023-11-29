@@ -1,0 +1,1 @@
+{"file":"state.js","mappings":";;MAEM,EAAE,KAAK,EAAE,QAAQ,EAAE,GAAG,WAAW,CAAC;EACtC,SAAS,EAAE,EAAE;CACd;;;;","names":[],"sources":["./src/components/shared/modal-dialog/state.ts"],"sourcesContent":["import { createStore } from '@stencil/store';\r\n\r\nconst { state, onChange } = createStore({\r\n  instances: []\r\n});\r\n\r\nexport default state;\r\n"],"version":3}

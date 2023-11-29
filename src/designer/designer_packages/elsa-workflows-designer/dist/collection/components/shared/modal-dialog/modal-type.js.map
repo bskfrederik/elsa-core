@@ -1,0 +1,1 @@
+{"version":3,"file":"modal-type.js","sourceRoot":"","sources":["../../../../src/components/shared/modal-dialog/modal-type.ts"],"names":[],"mappings":"AAAA,MAAM,CAAN,IAAY,SAGX;AAHD,WAAY,SAAS;EACjB,+CAAO,CAAA;EACP,yDAAY,CAAA;AAChB,CAAC,EAHW,SAAS,KAAT,SAAS,QAGpB","sourcesContent":["export enum ModalType {\r\n    Default,\r\n    Confirmation\r\n}"]}

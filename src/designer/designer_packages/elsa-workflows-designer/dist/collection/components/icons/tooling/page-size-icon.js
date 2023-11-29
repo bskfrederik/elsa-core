@@ -1,0 +1,3 @@
+import { h } from "@stencil/core";
+export const PageSizeIcon = () => h("svg", { class: "tw-h-5 tw-w-5 tw-text-gray-400 tw-mr-2", width: "24", height: "24", viewBox: "0 0 24 24", "stroke-width": "2", stroke: "currentColor", fill: "none", "stroke-linecap": "round", "stroke-linejoin": "round" }, h("path", { stroke: "none", d: "M0 0h24v24H0z" }), h("line", { x1: "9", y1: "6", x2: "20", y2: "6" }), h("line", { x1: "9", y1: "12", x2: "20", y2: "12" }), h("line", { x1: "9", y1: "18", x2: "20", y2: "18" }), h("line", { x1: "5", y1: "6", x2: "5", y2: "6.01" }), h("line", { x1: "5", y1: "12", x2: "5", y2: "12.01" }), h("line", { x1: "5", y1: "18", x2: "5", y2: "18.01" }));
+//# sourceMappingURL=page-size-icon.js.map

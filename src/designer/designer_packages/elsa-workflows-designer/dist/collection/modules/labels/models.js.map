@@ -1,0 +1,1 @@
+{"version":3,"file":"models.js","sourceRoot":"","sources":["../../../src/modules/labels/models.ts"],"names":[],"mappings":"","sourcesContent":["export interface Label {\r\n  id: string;\r\n  name: string;\r\n  description?: string;\r\n  color?: string;\r\n}\r\n"]}

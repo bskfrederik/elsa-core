@@ -1,0 +1,1 @@
+{"version":3,"file":"models.js","sourceRoot":"","sources":["../../../src/modules/login/models.ts"],"names":[],"mappings":"","sourcesContent":["export interface LoginResponse {\r\n  isAuthenticated: boolean;\r\n  accessToken: string;\r\n  refreshToken: string;\r\n}\r\n\r\nexport interface SignedInArgs {\r\n}\r\n"]}

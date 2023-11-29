@@ -1,0 +1,1 @@
+{"version":3,"file":"studio.js","sourceRoot":"","sources":["../../src/models/studio.ts"],"names":[],"mappings":"","sourcesContent":["import {Container} from \"typedi\";\r\nimport {PluginRegistry} from \"../services\";\r\n\r\nexport interface StudioInitializingContext {\r\n  container: Container;\r\n  pluginRegistry: PluginRegistry;\r\n}\r\n"]}

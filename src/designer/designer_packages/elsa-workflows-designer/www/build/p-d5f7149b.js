@@ -1,0 +1,2 @@
+import{C as s,a}from"./p-691e5295.js";import"./p-219f806a.js";import"./p-b6964c5d.js";async function t(t){const i=s.get(a);const e=await i.getElsaClient();return await e.designer.runtimeSelectListApi.get(t.runtimeSelectListProviderType,t.context||{})}async function i(s){const a=s.options;let i;if(!!a&&a.runtimeSelectListProviderType)i=await t(a);else if(Array.isArray(a))i={items:a,isFlagsEnum:false};else i=a;return i||{items:[],isFlagsEnum:false}}export{i as g};
+//# sourceMappingURL=p-d5f7149b.js.map

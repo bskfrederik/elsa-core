@@ -1,0 +1,14 @@
+{
+  "generalTab": "Allgemein",
+  "settingsTab": "Einstellungen",
+  "outputTab": "Output",
+  "taskTab": "Aufgabe",
+  "activityId": "ID",
+  "activityHint": "ID der Aktivtät",
+  "activityDisplayText": "Anzeige Text",
+  "activityDisplayHint": "Der Text, der im Designer angezeigt wird",
+  "activityCanStartWorkflow":"Kann Workflow starten",
+  "activityCanStartWorkflowHint":"Kann verwendet werden, um dem Workflow mit dieser Aktivität automatisch zu starten",
+  "taskExecuteAsynchronously": "Asynchron ausführen",
+  "taskExecuteAsynchronouslyHint": ""
+}

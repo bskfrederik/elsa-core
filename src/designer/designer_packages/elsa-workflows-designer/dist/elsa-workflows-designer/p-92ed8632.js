@@ -1,0 +1,2 @@
+function o(o){const t=document.createElement("textarea");t.value=o;t.style.top="0";t.style.left="0";t.style.position="fixed";document.body.appendChild(t);t.focus();t.select();try{document.execCommand("copy")}catch(o){console.error("Fallback: Oops, unable to copy",o)}document.body.removeChild(t)}function t(t){if(!navigator.clipboard){o(t);return}navigator.clipboard.writeText(t).catch((function(o){console.error("Async: Could not copy text: ",o)}))}export{t as c};
+//# sourceMappingURL=p-92ed8632.js.map

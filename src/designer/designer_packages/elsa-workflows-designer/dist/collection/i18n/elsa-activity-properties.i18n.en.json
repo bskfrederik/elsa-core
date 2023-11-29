@@ -1,0 +1,11 @@
+{
+  "propertiesTab": "Properties",
+  "commonTab": "Common",
+  "journalTab": "Journal",
+  "propertiesTabActivityId": "Activity ID",
+  "propertiesTabDisplayText": "Display Text",
+  "propertiesTabText": "Text",
+  "journalTabActivityId": "Activity ID",
+  "journalTabException": "Exception"
+
+}

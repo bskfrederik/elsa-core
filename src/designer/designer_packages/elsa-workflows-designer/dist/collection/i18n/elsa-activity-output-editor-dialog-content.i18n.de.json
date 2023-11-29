@@ -1,0 +1,12 @@
+{
+  "editOutputDefinition": "Ausgabe Definition bearbeiten",
+  "outputName": "Ausgabe Name",
+  "outputNameHint": "Der technische Name der Ausgabe",
+  "outputType": "Ausgabetyp",
+  "outputTypeHint": "Der Datentyp der Ausgabe",
+  "outputDisplayName": "Anzeigename",
+  "outputDisplayNameHint": "",
+  "outputDescription": "Beschreibung",
+  "outputDescriptionHint": ""
+
+}

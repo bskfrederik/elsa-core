@@ -1,0 +1,16 @@
+{
+  "workflowInstance": "Workflow Instanz",
+  "propertiesTab": "Eigenschaften",
+  "propertiesTabIdentity": "Identität",
+  "propertiesTabInstanceId": "Instanz Id",
+  "propertiesTabDefinitionId": "Definitions Id",
+  "propertiesTabVersion": "Version",
+  "propertiesNew":"Neu",
+  "propertiesTabStatus": "Status",
+  "propertiesTabSubStatus": "Sub Status",
+  "propertiesTabTimeStamps": "Zeitstempel",
+  "propertiesTabCreated": "Erstellt",
+  "propertiesTabLastExecution": "Letzte Ausführung",
+  "propertiesTabFinished": "Beended",
+  "variablesTab": "Variablen"
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Workflow Defintionen",
+  "name": "Name",
+  "instances": "Instanzen",
+  "latestVersion": "Neuste Version",
+  "publishedVersion": "Veröffentlichte Version",
+  "buttonEdit": "Bearbeiten",
+  "buttonPublish": "Veröffentlichen",
+  "buttonDelete": "Löschen",
+  "search": "Definitionen Suchen",
+  "bulkActions": "Bulk Aktionen",
+  "bulkDelete": "Löschen",
+  "bulkPublish": "Veröffentlichen",
+  "bulkUnpublish": "Unveröffentlichen",
+  "pageSize": "Seitengröße",
+  "orderBy": "Sortieren"
+}

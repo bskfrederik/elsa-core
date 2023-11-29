@@ -1,0 +1,17 @@
+{
+  "title": "Workflow Definitions",
+  "name": "NAME",
+  "instances": "INSTANCES",
+  "latestVersion": "LATEST VERSION",
+  "publishedVersion": "PUBLISHED VERSION",
+  "buttonEdit": "Edit",
+  "buttonPublish": "Publish",
+  "buttonDelete": "Delete",
+  "search": "Search",
+  "bulkActions": "Bulk Actions",
+  "bulkDelete": "Delete",
+  "bulkPublish": "Publish",
+  "bulkUnpublish": "Unpublish",
+  "pageSize": "Page size",
+  "orderBy": "Order by"
+}

@@ -1,0 +1,13 @@
+{
+  "editVariable": "Edit Variable",
+  "labelName": "Name",
+  "nameHint": "The technical name of the variable.",
+  "labelType": "Type",
+  "typeHint": "The type of the variable.",
+  "labelArray": "This variable is an array",
+  "arrayHint": "Check if the variable holds an array of the selected type.",
+  "labelValue": "Value",
+  "valueHint": "The value of the variable.",
+  "labelStorage": "Storage",
+  "storageHint": "The storage to use when persisting the variable."
+}

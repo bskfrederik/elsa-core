@@ -1,0 +1,1 @@
+{"version":3,"names":["WorkflowContextProviderTypesKey"],"sources":["./src/modules/workflow-contexts/constants.ts"],"sourcesContent":["export const WorkflowContextProviderTypesKey = 'Elsa:WorkflowContextProviderTypes';\r\n"],"mappings":"MAAaA,EAAkC,2C"}

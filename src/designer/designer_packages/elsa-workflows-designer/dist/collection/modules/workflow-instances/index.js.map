@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/modules/workflow-instances/index.ts"],"names":[],"mappings":"AAAA,cAAc,mCAAmC,CAAC;AAClD,cAAc,4BAA4B,CAAC;AAC3C,cAAc,2BAA2B,CAAC","sourcesContent":["export * from './services/workflow-instances-api';\r\nexport * from './services/viewer-instance';\r\nexport * from './services/viewer-service';\r\n"]}

@@ -1,0 +1,15 @@
+{
+  "inputsLabel": "Inputs",
+  "inputName": "Name",
+  "inputType": "Type",
+  "addInputButton": "Add input parameter",
+  "outputLabel": "Outputs",
+  "outputName": "Name",
+  "outputType": "Type",
+  "addOutputButton": "Add output parameter",
+  "labelOutcome": "Outcome",
+  "placeholderOutcome": "Add outcome",
+  "outcomeHint": "Enter a list of possible outcomes for this workflow.",
+  "editButton": "Edit",
+  "deleteButton": "Delete"
+}
