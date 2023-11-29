@@ -16,9 +16,14 @@
     }
   }
 
-  .panel-content-container {
-    left: 0;
-    top: 0;
-    display: none;
-  }
+  // .panel-content-container {
+  //   left: 0;
+  //   top: 0;
+  //   display: none;
+  // }
+}
+
+.panel-position-bottom {
+  right: var(--workflow-editor-width) !important;
+  left: var(--activity-picker-width) !important;
 }

@@ -1,9 +1,10 @@
-import {Component, Event, EventEmitter, h, Prop, State, Watch} from "@stencil/core";
+import {Component, Element, Event, EventEmitter, h, Prop, State, Watch} from "@stencil/core";
 import {StorageDriverDescriptor, Variable} from "../../../../models";
 import descriptorsStore from "../../../../data/descriptors-store";
 import {Container} from "typedi";
 import {ModalActionClickArgs, ModalActionDefinition, ModalActionType, ModalDialogInstance, ModalDialogService} from "../../../../components/shared/modal-dialog";
 import {DeleteIcon, EditIcon} from "../../../../components/icons/tooling";
+import { getLocaleComponentStrings } from "../../../../utils/locale";
 
 @Component({
   tag: 'elsa-variables-editor',
@@ -13,6 +14,9 @@ export class VariablesEditor {
   private readonly modalDialogService: ModalDialogService;
   private readonly saveAction: ModalActionDefinition;
   private modalDialogInstance: ModalDialogInstance;
+
+  @Element() element: HTMLElement;
+  strings!: any;
 
   constructor() {
     this.modalDialogService = Container.get(ModalDialogService);
@@ -35,7 +39,8 @@ export class VariablesEditor {
     this.variablesState = !!this.variables ? [...this.variables] : [];
   }
 
-  componentWillLoad() {
+  async componentWillLoad() {
+    this.strings = await getLocaleComponentStrings(this.element);
     this.onVariablesPropChanged(this.variables);
   }
 
@@ -52,9 +57,9 @@ export class VariablesEditor {
           <table class="default-table">
             <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Type</th>
-              <th scope="col">Storage</th>
+              <th scope="col">{this.strings.columName}</th>
+              <th scope="col">{this.strings.columnType}</th>
+              <th scope="col">{this.strings.columStorage}</th>
               <th scope="col"/>
             </tr>
             </thead>
@@ -73,8 +78,8 @@ export class VariablesEditor {
                     <td class="tw-pr-6">
                       <elsa-context-menu
                         menuItems={[
-                          {text: 'Edit', handler: e => this.onEditClick(e, variable), icon: <EditIcon/>},
-                          {text: 'Delete', handler: e => this.onDeleteClick(e, variable), icon: <DeleteIcon/>},
+                          {text: this.strings.variableEditButton, handler: e => this.onEditClick(e, variable), icon: <EditIcon/>},
+                          {text: this.strings.variableDeleteButton, handler: e => this.onDeleteClick(e, variable), icon: <DeleteIcon/>},
                         ]}
                       />
                     </td>

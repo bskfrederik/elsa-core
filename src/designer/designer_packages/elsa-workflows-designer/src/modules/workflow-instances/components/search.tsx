@@ -3,9 +3,10 @@ import {debounce} from 'lodash';
 
 export interface SearchProps {
   onSearch: (term: string) => void;
+  searchTextPlaceholder: string;
 }
 
-export const Search: FunctionalComponent<SearchProps> = ({onSearch}) => {
+export const Search: FunctionalComponent<SearchProps> = ({onSearch, searchTextPlaceholder}) => {
 
   const onSubmit = (e: Event) => {
     e.preventDefault();
@@ -39,7 +40,7 @@ export const Search: FunctionalComponent<SearchProps> = ({onSearch}) => {
             <input name="searchTerm"
                    onKeyUp={onKeyUp}
                    class="tw-block tw-w-full tw-h-full tw-pl-8 tw-pr-3 tw-py-2 tw-rounded-md tw-text-gray-900 tw-placeholder-cool-gray-500 focus:tw-placeholder-cool-gray-400 sm:tw-text-sm tw-border-0 focus:tw-outline-none focus:tw-ring-0"
-                   placeholder="Search"
+                   placeholder={searchTextPlaceholder}
                    type="search"/>
           </div>
         </form>

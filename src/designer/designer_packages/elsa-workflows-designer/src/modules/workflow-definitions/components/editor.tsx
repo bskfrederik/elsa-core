@@ -379,7 +379,8 @@ export class WorkflowDefinitionEditor {
             </div>
           </elsa-panel>
           <elsa-panel
-            class="elsa-activity-editor-container"
+            class="elsa-activity-editor-container panel-bottom"
+
             position={PanelPosition.Bottom}
             onExpandedStateChanged={e => this.onActivityEditorPanelStateChanged(e.detail)}>
             <div class="activity-editor-container">

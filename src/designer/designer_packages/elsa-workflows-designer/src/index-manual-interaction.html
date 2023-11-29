@@ -20,7 +20,7 @@
   import {createElsaClient} from '/build/index.esm.js';
 
   // Create an Elsa API client.
-  const client = await createElsaClient('https://localhost:5001');
+  const client = await createElsaClient('http://localhost:13000');
 
   // Load available activities from server.
   const activityDescriptors = await client.activityDescriptorsApi.list();

@@ -4,6 +4,7 @@ export interface PagerProps {
   currentPage: number;
   pageCount: number;
   onNavigate: (page: number) => void;
+  text: string;
 }
 
 const clickHandler = (e: MouseEvent, onNavigate: () => void) => {
@@ -11,17 +12,17 @@ const clickHandler = (e: MouseEvent, onNavigate: () => void) => {
   onNavigate();
 };
 
-export const PreviousButton: FunctionalComponent<PagerProps> = ({currentPage, pageCount, onNavigate}) => currentPage > 0 ?
+export const PreviousButton: FunctionalComponent<PagerProps> = ({currentPage, pageCount, onNavigate, text}) => currentPage > 0 ?
   <a href="#" onClick={e => clickHandler(e, () => onNavigate(currentPage - 1))}
      class="elsa-pager-button previous">
-    Previous
+    {text}
   </a> : undefined;
 
-export const NextButton: FunctionalComponent<PagerProps> = ({currentPage, pageCount, onNavigate}) => currentPage < pageCount ?
+export const NextButton: FunctionalComponent<PagerProps> = ({currentPage, pageCount, onNavigate, text}) => currentPage < pageCount ?
   <a href="#"
      onClick={e => clickHandler(e, () => onNavigate(currentPage + 1))}
      class="elsa-pager-button next">
-    Next
+    {text}
   </a> : undefined;
 
 export const ChevronLeft: FunctionalComponent<PagerProps> = ({currentPage, pageCount, onNavigate}) => currentPage > 0 ?

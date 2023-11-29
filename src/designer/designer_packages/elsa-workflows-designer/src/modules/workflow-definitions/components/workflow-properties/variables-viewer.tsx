@@ -1,7 +1,8 @@
-import {Component, h, Prop, } from "@stencil/core";
+import {Component, Element, h, Prop, } from "@stencil/core";
 import {StorageDriverDescriptor, Variable, WorkflowInstance} from "../../../../models";
 import descriptorsStore from "../../../../data/descriptors-store";
 import {WorkflowDefinition} from "../../models/entities";
+import { getLocaleComponentStrings } from "../../../../utils/locale";
 
 @Component({
   tag: 'elsa-variables-viewer',
@@ -13,6 +14,14 @@ export class VariablesViewer {
   @Prop() workflowDefinition: WorkflowDefinition;
   @Prop() workflowInstance: WorkflowInstance;
 
+  @Element() element: HTMLElement;
+  strings!: any;
+
+  async componentWillLoad() {
+    this.strings = await getLocaleComponentStrings(this.element);
+  }
+
+
   render() {
     const variables = this.variables;
     const storageDrivers: Array<StorageDriverDescriptor> = descriptorsStore.storageDrivers;
@@ -23,10 +32,10 @@ export class VariablesViewer {
           <table class="default-table">
             <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Type</th>
-              <th scope="col">Storage</th>
-              <th scope="col">Value</th>
+              <th scope="col">{this.strings.variablesTabName}</th>
+              <th scope="col">{this.strings.variablesTabValue}</th>
+              <th scope="col">{this.strings.variablesTabType}</th>
+              <th scope="col">{this.strings.variablesTabStorage}</th>
             </tr>
             </thead>
             <tbody>

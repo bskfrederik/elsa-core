@@ -6,11 +6,13 @@ import {WorkflowDefinitionsOrderBy} from "../services/api";
 export interface PageSizeFilterProps {
   selectedPageSize: number;
   onChange: (pageSize: number) => void;
+  pageSizeText: string;
 }
 
 export interface OrderByFilterProps {
   selectedOrderBy?: WorkflowDefinitionsOrderBy;
   onChange: (orderBy: WorkflowDefinitionsOrderBy) => void;
+  orderByText: string;
 }
 
 export interface LabelFilterProps {
@@ -30,13 +32,17 @@ export interface BulkActionsProps {
   onBulkDelete: () => void;
   onBulkPublish: () => void;
   onBulkUnpublish: () => void;
+  bulkActionsText: string;
+  bulkDeleteText: string;
+  bulkPublishText: string;
+  bulkUnpublishText: string;
 }
 
-export const Filter: FunctionalComponent<FilterProps> = ({ pageSizeFilter, orderByFilter, onBulkDelete, onBulkPublish, onBulkUnpublish, labelFilter }) => {
+export const Filter: FunctionalComponent<FilterProps> = ({ pageSizeFilter, orderByFilter, onBulkDelete, onBulkPublish, onBulkUnpublish, labelFilter, bulkActionsText, bulkDeleteText, bulkPublishText, bulkUnpublishText }) => {
   return (
     <div class="tw-p-8 tw-flex tw-content-end tw-justify-right tw-bg-white tw-space-x-4">
       <div class="tw-flex-shrink-0">
-        <BulkActions onBulkDelete={onBulkDelete} onBulkPublish={onBulkPublish} onBulkUnpublish={onBulkUnpublish} />
+        <BulkActions onBulkDelete={onBulkDelete} onBulkPublish={onBulkPublish} onBulkUnpublish={onBulkUnpublish} bulkActionsText={bulkActionsText} bulkDeleteText={bulkDeleteText} bulkPublishText={bulkPublishText} bulkUnpublishText={bulkUnpublishText} />
       </div>
       <div class="tw-flex-1">&nbsp;</div>
 
@@ -47,18 +53,21 @@ export const Filter: FunctionalComponent<FilterProps> = ({ pageSizeFilter, order
   );
 };
 
-const BulkActions: FunctionalComponent<BulkActionsProps> = ({ onBulkDelete, onBulkPublish, onBulkUnpublish }) => {
+
+
+const BulkActions: FunctionalComponent<BulkActionsProps> = ({ onBulkDelete, onBulkPublish, onBulkUnpublish,
+  bulkActionsText, bulkDeleteText, bulkPublishText, bulkUnpublishText }) => {
   const bulkActions = [
     {
-      text: 'Delete',
+      text: bulkDeleteText,
       name: 'Delete',
     },
     {
-      text: 'Publish',
+      text: bulkPublishText,
       name: 'Publish',
     },
     {
-      text: 'Unpublish',
+      text: bulkUnpublishText,
       name: 'Unpublish',
     },
   ];
@@ -81,7 +90,7 @@ const BulkActions: FunctionalComponent<BulkActionsProps> = ({ onBulkDelete, onBu
     }
   };
 
-  return <elsa-dropdown-button text="Bulk Actions"
+  return <elsa-dropdown-button text={bulkActionsText}
                                items={bulkActions}
                                theme="Secondary"
                                icon={<BulkActionsIcon />}
@@ -89,8 +98,8 @@ const BulkActions: FunctionalComponent<BulkActionsProps> = ({ onBulkDelete, onBu
                                onItemSelected={onBulkActionSelected} />;
 };
 
-const PageSizeFilter: FunctionalComponent<PageSizeFilterProps> = ({ selectedPageSize, onChange }) => {
-  const selectedPageSizeText = `Page size: ${selectedPageSize}`;
+const PageSizeFilter: FunctionalComponent<PageSizeFilterProps> = ({ selectedPageSize, onChange, pageSizeText }) => {
+  const selectedPageSizeText = `${pageSizeText}: ${selectedPageSize}`;
   const pageSizes: Array<number> = [5, 10, 15, 20, 30, 50, 100];
 
   const items: Array<DropdownButtonItem> = pageSizes.map(x => {
@@ -103,8 +112,8 @@ const PageSizeFilter: FunctionalComponent<PageSizeFilterProps> = ({ selectedPage
   return <elsa-dropdown-button text={selectedPageSizeText} items={items} theme="Secondary" icon={<PageSizeIcon />} origin={DropdownButtonOrigin.TopRight} onItemSelected={onPageSizeChanged} />;
 };
 
-const OrderByFilter: FunctionalComponent<OrderByFilterProps> = ({ selectedOrderBy, onChange }) => {
-  const selectedOrderByText = !!selectedOrderBy ? `Ordered by: ${selectedOrderBy}` : 'Order by';
+const OrderByFilter: FunctionalComponent<OrderByFilterProps> = ({ selectedOrderBy, onChange, orderByText }) => {
+  const selectedOrderByText = !!selectedOrderBy ? `${orderByText}: ${selectedOrderBy}` : orderByText;
   const orderByValues: Array<WorkflowDefinitionsOrderBy> = [WorkflowDefinitionsOrderBy.Name, WorkflowDefinitionsOrderBy.Created];
   const items: Array<DropdownButtonItem> = orderByValues.map(x => ({ text: x, value: x, isSelected: x == selectedOrderBy }));
   const onOrderByChanged = (e: CustomEvent<DropdownButtonItem>) => onChange(e.detail.value);

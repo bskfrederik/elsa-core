@@ -4,7 +4,8 @@
   &.x6-graph-scroller-pannable[data-panning='false'] {
     cursor: default;
   }
-  width: calc(100vw - var(--workflow-editor-width) - var(--activity-picker-width)) !important;
+  width: 100vw !important;
+  height: calc(100vh - 64px) !important;
 }
 
 .x6-widget-selection-box {
@@ -26,5 +27,7 @@
   border: 2px solid #34D399;
   box-shadow: none;
 }
+
+
 
 /* purgecss end ignore */

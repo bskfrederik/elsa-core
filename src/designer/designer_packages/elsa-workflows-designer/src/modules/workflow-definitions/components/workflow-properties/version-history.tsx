@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Prop, Watch} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, h, Prop, Watch} from '@stencil/core';
 import {Container} from "typedi";
 import {EventBus} from "../../../../services";
 import {WorkflowDefinition} from "../../models/entities";
@@ -6,6 +6,7 @@ import {WorkflowDefinitionsApi} from "../../services/api";
 import {DeleteIcon, RevertIcon, PublishedIcon} from "../../../../components/icons/tooling";
 import moment from "moment";
 import {ModalDialogService, DefaultModalActions, DefaultContents, ModalType} from "../../../../components/shared/modal-dialog";
+import { getLocaleComponentStrings } from '../../../../utils/locale';
 
 @Component({
   tag: 'elsa-workflow-definition-version-history',
@@ -27,6 +28,14 @@ export class WorkflowDefinitionVersionHistory {
   @Event() versionSelected: EventEmitter<WorkflowDefinition>;
   @Event() deleteVersionClicked: EventEmitter<WorkflowDefinition>;
   @Event() revertVersionClicked: EventEmitter<WorkflowDefinition>;
+
+  @Element() element: HTMLElement;
+  strings!: any;
+
+  async componentWillLoad() {
+    this.strings = await getLocaleComponentStrings(this.element);
+  }
+
 
   onViewVersionClick = (e: Event, version: WorkflowDefinition) => {
     e.preventDefault();
@@ -55,8 +64,8 @@ export class WorkflowDefinitionVersionHistory {
           <thead>
           <tr>
             <th/>
-            <th>Version</th>
-            <th>Created</th>
+            <th>{this.strings.version}</th>
+            <th>{this.strings.created}</th>
             <th/>
             <th/>
           </tr>
@@ -64,10 +73,10 @@ export class WorkflowDefinitionVersionHistory {
           <tbody>
           {this.workflowVersions.map(v => {
               let menuItems = [];
-              menuItems.push({text: 'Delete', handler: e => this.onDeleteVersionClick(e, v), icon: <DeleteIcon/>});
+              menuItems.push({text: this.strings.delete, handler: e => this.onDeleteVersionClick(e, v), icon: <DeleteIcon/>});
 
               if (!v.isLatest)
-                menuItems.push({text: 'Revert', handler: e => this.onRevertVersionClick(e, v), icon: <RevertIcon/>});
+                menuItems.push({text: this.strings.revert, handler: e => this.onRevertVersionClick(e, v), icon: <RevertIcon/>});
 
               return (
                 <tr>
@@ -79,7 +88,7 @@ export class WorkflowDefinitionVersionHistory {
                             type="button"
                             disabled={this.selectedVersion.version == v.version}
                             class={this.selectedVersion.version == v.version ? "elsa-btn elsa-btn-primary" : "elsa-btn elsa-btn-secondary"}>
-                      View
+                      {this.strings.view}
                     </button>
                   </td>
                   <td>

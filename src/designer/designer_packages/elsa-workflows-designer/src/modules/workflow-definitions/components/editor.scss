@@ -39,7 +39,6 @@ elsa-panel.panel-state-expanded.elsa-activity-editor-container {
 }
 
 .activity-picker-closed {
-
   .activity-list {
     display: none;
   }
@@ -50,7 +49,6 @@ elsa-panel.panel-state-expanded.elsa-activity-editor-container {
 }
 
 .object-editor-closed {
-
   .object-editor-container {
     display: none;
   }
@@ -60,9 +58,7 @@ elsa-panel.panel-state-expanded.elsa-activity-editor-container {
   }
 }
 
-
 .activity-editor-closed {
-
   .activity-editor-container {
     display: none;
   }
@@ -70,4 +66,8 @@ elsa-panel.panel-state-expanded.elsa-activity-editor-container {
   elsa-flowchart {
     bottom: 0;
   }
+}
+
+.panel-bottom {
+  width: calc(100vw - var(--workflow-editor-width) - var(--activity-picker-width));
 }

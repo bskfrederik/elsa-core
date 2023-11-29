@@ -1,4 +1,4 @@
-import {Component, h, Prop, Event, EventEmitter, Method} from "@stencil/core";
+import {Component, h, Prop, Event, EventEmitter, Method, Element} from "@stencil/core";
 import {groupBy} from 'lodash';
 import descriptorsStore from '../../../../data/descriptors-store';
 import {VariableDescriptor} from "../../../../services/api-client/variable-descriptors-api";
@@ -6,6 +6,7 @@ import {InputDefinition} from "../../models/entities";
 import {CheckboxFormEntry, FormEntry} from "../../../../components/shared/forms/form-entry";
 import {StorageDriverDescriptor} from "../../../../models";
 import {isNullOrWhitespace} from "../../../../utils";
+import { getLocaleComponentStrings } from "../../../../utils/locale";
 
 @Component({
   tag: 'elsa-activity-input-editor-dialog-content',
@@ -20,6 +21,14 @@ export class ActivityInputEditorDialogContent {
   @Method()
   async getInput(): Promise<InputDefinition> {
     return this.getInputInternal(this.formElement);
+  }
+
+  @Element() element: HTMLElement;
+  strings!: any;
+
+  async componentWillLoad() {
+    this.strings = await getLocaleComponentStrings(this.element);
+    console.log(this.strings);
   }
 
   render() {
@@ -68,14 +77,14 @@ export class ActivityInputEditorDialogContent {
       <div>
         <form ref={el => this.formElement = el} class="tw-h-full tw-flex tw-flex-col tw-bg-white" onSubmit={e => this.onSubmit(e)} method="post">
           <div class="tw-pt-4">
-            <h2 class="tw-text-lg tw-font-medium tw-ml-4 tw-mb-2">Edit input definition</h2>
+            <h2 class="tw-text-lg tw-font-medium tw-ml-4 tw-mb-2"> {this.strings.editInputConfiguration}</h2>
             <div class="tw-align-middle tw-inline-block tw-min-w-full tw-border-b tw-border-gray-200">
 
-              <FormEntry fieldId="inputName" label="Name" hint="The technical name of the input.">
+              <FormEntry fieldId="inputName" label={this.strings.inputName} hint={this.strings.inputNameHint}>
                 <input type="text" name="inputName" id="inputName" value={input.name}/>
               </FormEntry>
 
-              <FormEntry fieldId="inputTypeName" label="Type" hint="The type of the input.">
+              <FormEntry fieldId="inputTypeName" label={this.strings.inputType} hint={this.strings.inputTypeHint}>
                 <select id="inputTypeName" name="inputTypeName">
                   {Object.keys(groupedTypes).map(category => {
                     const types = groupedTypes[category] as Array<VariableDescriptor>;
@@ -86,23 +95,23 @@ export class ActivityInputEditorDialogContent {
                 </select>
               </FormEntry>
 
-              <CheckboxFormEntry fieldId="inputIsArray" label="This input is an array" hint="Check if the input holds an array of the selected type.">
+              <CheckboxFormEntry fieldId="inputIsArray" label={this.strings.arrayInputLabel} hint={this.strings.arrayInputHint}>
                 <input type="checkbox" name="inputIsArray" id="inputIsArray" value="true" checked={input.isArray}/>
               </CheckboxFormEntry>
 
-              <FormEntry fieldId="inputDisplayName" label="Display name" hint="The user friendly display name of the input.">
+              <FormEntry fieldId="inputDisplayName" label={this.strings.displayNameLabel} hint={this.strings.displayNameHint}>
                 <input type="text" name="inputDisplayName" id="inputDisplayName" value={input.displayName}/>
               </FormEntry>
 
-              <FormEntry fieldId="inputDescription" label="Description" hint="A description of the input.">
+              <FormEntry fieldId="inputDescription" label={this.strings.inputDescriptionLabel} hint={this.strings.inputDescriptionHint}>
                 <input type="text" name="inputDescription" id="inputDescription" value={input.description}/>
               </FormEntry>
 
-              <FormEntry fieldId="inputCategory" label="Category" hint="A custom category.">
+              <FormEntry fieldId="inputCategory" label={this.strings.inputCategoryLabel} hint={this.strings.inputCategoryHint}>
                 <input type="text" name="inputCategory" id="inputCategory" value={input.category}/>
               </FormEntry>
 
-              <FormEntry fieldId="inputUIHint" label="Control" hint="The control to use for this input.">
+              <FormEntry fieldId="inputUIHint" label={this.strings.controlLabel} hint={this.strings.controlHint}>
                 <select name="inputUIHint" id="inputUIHint">
                   {uiHints.map(uiHint => {
                     const isSelected = uiHint.value == selectedUIHint;
@@ -111,7 +120,7 @@ export class ActivityInputEditorDialogContent {
                 </select>
               </FormEntry>
 
-              <FormEntry fieldId="inputStorageDriverType" label="Storage" hint="The storage to use when persisting the input.">
+              <FormEntry fieldId="inputStorageDriverType" label={this.strings.storageLabel} hint={this.strings.storageHint}>
                 <select id="inputStorageDriverType" name="inputStorageDriverType">
                   {storageDrivers.map(driver => {
                     const value = driver.typeName;

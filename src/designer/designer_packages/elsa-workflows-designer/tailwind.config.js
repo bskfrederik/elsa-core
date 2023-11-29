@@ -7,7 +7,7 @@ const dev = process.argv && process.argv.indexOf('--dev') > -1;
 module.exports = {
   content: ['./src/**/*.tsx', './src/**/*.ts'],
   darkMode: 'media',
-  important: 'elsa-studio',
+  // important: 'elsa-studio',
   prefix: 'tw-', // This is important to avoid conflicts with the host app's styles.
   theme: {
     extend: {

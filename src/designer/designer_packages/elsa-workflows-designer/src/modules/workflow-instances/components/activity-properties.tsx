@@ -1,4 +1,4 @@
-import {Component, h, Method, Prop, State, Watch} from '@stencil/core';
+import {Component, Element, h, Method, Prop, State, Watch} from '@stencil/core';
 import {camelCase} from 'lodash';
 import {
   Activity,
@@ -14,6 +14,7 @@ import moment from 'moment';
 import Container from 'typedi';
 import { ActivityIconRegistry } from '../../../services';
 import {ActivityIconSize} from "../../../components/icons/activities";
+import { getLocaleComponentStrings } from '../../../utils/locale';
 
 @Component({
   tag: 'elsa-activity-properties',
@@ -30,6 +31,9 @@ export class ActivityProperties {
   @Prop() activityExecutionLog: WorkflowExecutionLogRecord;
   @Prop() activityPropertyTabIndex?: number;
   @State() private selectedTabIndex: number = 0;
+
+  @Element() element: HTMLElement;
+  strings!: any;
 
   @Method()
   async show(): Promise<void> {
@@ -50,6 +54,8 @@ export class ActivityProperties {
 
 
   async componentWillLoad(): Promise<void> {
+    this.strings = await getLocaleComponentStrings(this.element);
+    console.log(this.strings);
     if(this.activityPropertyTabIndex != null) {
       this.selectedTabIndex = this.activityPropertyTabIndex;
     }
@@ -60,17 +66,17 @@ export class ActivityProperties {
     const activityDescriptor = this.findActivityDescriptor();
 
     const propertiesTab: TabDefinition = {
-      displayText: 'Properties',
+      displayText: this.strings.propertiesTab,
       content: () => this.renderPropertiesTab()
     };
 
     const commonTab: TabDefinition = {
-      displayText: 'Common',
+      displayText: this.strings.commonTab,
       content: () => this.renderCommonTab()
     };
 
     const journalTab: TabDefinition = {
-      displayText: 'Journal',
+      displayText: this.strings.journalTab,
       content: () => this.renderJournalTab()
     };
 
@@ -109,8 +115,8 @@ export class ActivityProperties {
     const activityState = executionLogEntry?.activityState ?? {};
 
     const propertyDetails: Lookup<string> = {
-      'Activity ID': activityId,
-      'Display Text': displayText
+      [this.strings.propertiesTabActivityId]: activityId,
+      [this.strings.propertiesTabDisplayText]: displayText
     };
 
     for (const property of properties) {
@@ -121,7 +127,7 @@ export class ActivityProperties {
     }
 
     return <div>
-      <InfoList title="Properties" dictionary={propertyDetails}/>
+      <InfoList title={this.strings.propertiesTab} dictionary={propertyDetails}/>
     </div>
   };
 
@@ -171,7 +177,7 @@ export class ActivityProperties {
               <div class="tw-grid tw-grid-cols-2 tw-gap-x-4 tw-gap-y-8 sm:tw-grid-cols-2">
                 <div class="sm:tw-col-span-2">
                   <dt class="tw-text-sm tw-font-medium tw-text-gray-500">
-                    <span>Activity ID</span>
+                    <span>{this.strings.journalTabActivityId}</span>
                     <copy-button value={log.activityId}/>
                   </dt>
                   <dd class="tw-mt-1 tw-text-sm tw-text-gray-900 tw-mb-2">{log.activityId}</dd>
@@ -179,7 +185,7 @@ export class ActivityProperties {
                 {!!exception ? (
                   [<div class="sm:tw-col-span-2">
                     <dt class="tw-text-sm tw-font-medium tw-text-gray-500">
-                      <span>Exception</span>
+                      <span>{this.strings.journalTabException}</span>
                       <copy-button value={exception.Type + '\n' + exception.Message}/>
                     </dt>
                     <dd class="tw-mt-1 tw-text-sm tw-text-gray-900">

@@ -1,0 +1,19 @@
+{
+  "name": "Worfklow Instanzen",
+  "searchTextPlaceholder": "Instanzen suchen",
+  "bulkText": "Bulk Aktionen",
+  "bulkDeleteText": "Löschen",
+  "bulkCancelText": "Abbrechen",
+  "resetText": "Zurücksetzen",
+  "pageSizes": "Seitengröße",
+  "allWorkflows": "Alle Workflows",
+  "orderBy": "Sortieren",
+  "id": "ID",
+  "correlation": "Korrelation",
+  "worfklow": "Workflow",
+  "version": "Version",
+  "workflowName": "Name",
+  "status": "Status",
+  "created": "Erstellt",
+  "finished": "Beendet"
+}

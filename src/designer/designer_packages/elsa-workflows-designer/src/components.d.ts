@@ -28,6 +28,7 @@ import { PanelPosition, PanelStateChangedArgs } from "./components/panel/models"
 import { StudioInitializingContext } from "./models/studio";
 import { WorkflowContextProviderDescriptor } from "./modules/workflow-contexts/services/api";
 import { RenderActivityPropsContext } from "./modules/workflow-definitions/components/models";
+import { CustomAction } from "./modules/workflow-definitions/components/browser";
 import { ActivityDriverRegistry } from "./services";
 import { WorkflowJournalModel } from "./modules/workflow-instances/models";
 import { JournalItemSelectedArgs } from "./modules/workflow-instances/events";
@@ -55,6 +56,7 @@ export { PanelPosition, PanelStateChangedArgs } from "./components/panel/models"
 export { StudioInitializingContext } from "./models/studio";
 export { WorkflowContextProviderDescriptor } from "./modules/workflow-contexts/services/api";
 export { RenderActivityPropsContext } from "./modules/workflow-definitions/components/models";
+export { CustomAction } from "./modules/workflow-definitions/components/browser";
 export { ActivityDriverRegistry } from "./services";
 export { WorkflowJournalModel } from "./modules/workflow-instances/models";
 export { JournalItemSelectedArgs } from "./modules/workflow-instances/events";
@@ -324,6 +326,7 @@ export namespace Components {
         "renderContext": RenderActivityPropsContext;
     }
     interface ElsaWorkflowDefinitionBrowser {
+        "customActions": CustomAction[];
     }
     interface ElsaWorkflowDefinitionEditor {
         "getFlowchart": () => Promise<HTMLElsaFlowchartElement>;
@@ -1296,8 +1299,10 @@ declare namespace LocalJSX {
         "renderContext"?: RenderActivityPropsContext;
     }
     interface ElsaWorkflowDefinitionBrowser {
+        "customActions"?: CustomAction[];
         "onNewWorkflowDefinitionSelected"?: (event: ElsaWorkflowDefinitionBrowserCustomEvent<any>) => void;
         "onWorkflowDefinitionSelected"?: (event: ElsaWorkflowDefinitionBrowserCustomEvent<WorkflowDefinitionSummary>) => void;
+        "onWorkflowInstanceStarted"?: (event: ElsaWorkflowDefinitionBrowserCustomEvent<WorkflowDefinitionSummary>) => void;
         "onWorkflowInstancesSelected"?: (event: ElsaWorkflowDefinitionBrowserCustomEvent<WorkflowDefinitionSummary>) => void;
     }
     interface ElsaWorkflowDefinitionEditor {

@@ -10,3 +10,4 @@ export {UnPublishIcon} from "./un-publish";
 export {WorkflowIcon} from "./workflow";
 export {WorkflowStatusIcon} from "./workflow-status-icon";
 export {WarningIcon} from "./warning";
+export {RunWorkflowIcon} from "./run-workflow";

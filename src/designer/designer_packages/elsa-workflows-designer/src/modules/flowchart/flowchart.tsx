@@ -1,27 +1,37 @@
 import 'reflect-metadata';
-import {Component, Element, Event, EventEmitter, h, Listen, Method, Prop, State, Watch} from '@stencil/core';
-import {first} from 'lodash';
-import {Edge, Graph, Model, Node, NodeView, Point} from '@antv/x6';
+import { Component, Element, Event, EventEmitter, h, Listen, Method, Prop, State, Watch } from '@stencil/core';
+import { first } from 'lodash';
+import { Edge, Graph, Model, Node, NodeView, Point } from '@antv/x6';
 import './shapes';
 import './ports';
-import {ActivityNodeShape} from './shapes';
-import {Activity, ActivityDeletedArgs, ActivityDescriptor, ActivitySelectedArgs, ChildActivitySelectedArgs, ContainerSelectedArgs, EditChildActivityArgs, GraphUpdatedArgs, WorkflowUpdatedArgs} from '../../models';
-import {createGraph} from './graph-factory';
-import {AddActivityArgs, Connection, Flowchart, FlowchartModel, FlowchartPathItem, LayoutDirection, RenameActivityArgs, UpdateActivityArgs} from './models';
-import {NodeFactory} from "./node-factory";
-import {Container} from "typedi";
-import {createActivityLookup, EventBus, flatten, PortProviderRegistry, walkActivities} from "../../services";
-import {ConnectionCreatedEventArgs, FlowchartEvents} from "./events";
-import {ContextMenuAnchorPoint, ContextMenuItem} from "../../components/shared/context-menu/models";
-import descriptorsStore from "../../data/descriptors-store";
-import {Hash} from "../../utils";
+import { ActivityNodeShape } from './shapes';
+import {
+  Activity,
+  ActivityDeletedArgs,
+  ActivityDescriptor,
+  ActivitySelectedArgs,
+  ChildActivitySelectedArgs,
+  ContainerSelectedArgs,
+  EditChildActivityArgs,
+  GraphUpdatedArgs,
+  WorkflowUpdatedArgs,
+} from '../../models';
+import { createGraph } from './graph-factory';
+import { AddActivityArgs, Connection, Flowchart, FlowchartModel, FlowchartPathItem, LayoutDirection, RenameActivityArgs, UpdateActivityArgs } from './models';
+import { NodeFactory } from './node-factory';
+import { Container } from 'typedi';
+import { createActivityLookup, EventBus, flatten, PortProviderRegistry, walkActivities } from '../../services';
+import { ConnectionCreatedEventArgs, FlowchartEvents } from './events';
+import { ContextMenuAnchorPoint, ContextMenuItem } from '../../components/shared/context-menu/models';
+import descriptorsStore from '../../data/descriptors-store';
+import { Hash } from '../../utils';
 import PositionEventArgs = NodeView.PositionEventArgs;
 import FromJSONData = Model.FromJSONData;
 import PointLike = Point.PointLike;
-import {generateUniqueActivityName} from "../../utils/generate-activity-name";
-import {DagreLayout, OutNode} from '@antv/layout';
-import {adjustPortMarkupByNode, getPortNameByPortId, rebuildGraph} from '../../utils/graph';
-import FlowchartTunnel, {FlowchartState} from "./state";
+import { generateUniqueActivityName } from '../../utils/generate-activity-name';
+import { DagreLayout, OutNode } from '@antv/layout';
+import { adjustPortMarkupByNode, getPortNameByPortId, rebuildGraph } from '../../utils/graph';
+import FlowchartTunnel, { FlowchartState } from './state';
 
 const FlowchartTypeName = 'Elsa.Flowchart';
 
@@ -87,12 +97,11 @@ export class FlowchartComponent {
 
   @Method()
   async reset(): Promise<void> {
-
-    const model: FromJSONData = {nodes: [], edges: []};
+    const model: FromJSONData = { nodes: [], edges: [] };
 
     // Freeze then unfreeze prevents an error from occurring when importing JSON a second time (e.g. after loading a new workflow.
     this.graph.freeze();
-    this.graph.fromJSON(model, {silent: false});
+    this.graph.fromJSON(model, { silent: false });
     this.graph.unfreeze();
   }
 
@@ -135,15 +144,20 @@ export class FlowchartComponent {
     const edges = [];
 
     flowchartModel.activities.forEach(activity => {
-      const activityElement = document.querySelectorAll("[activity-id=\"" + activity.id + "\"]")[0].getBoundingClientRect();
-      nodes.push({id: activity.id, size: {width: activityElement.width, height: activityElement.height}, x: activity.metadata.designer.position.x, y: activity.metadata.designer.position.y})
+      const activityElement = document.querySelectorAll('[activity-id="' + activity.id + '"]')[0].getBoundingClientRect();
+      nodes.push({
+        id: activity.id,
+        size: { width: activityElement.width, height: activityElement.height },
+        x: activity.metadata.designer.position.x,
+        y: activity.metadata.designer.position.y,
+      });
     });
 
     flowchartModel.connections.forEach((connection, index) => {
-      edges.push({id: index, source: connection.source, target: connection.target});
+      edges.push({ id: index, source: connection.source, target: connection.target });
     });
 
-    let data = {nodes: nodes, edges: edges}
+    let data = { nodes: nodes, edges: edges };
     let newLayout = dagreLayout.layout(data);
 
     newLayout.nodes.forEach(node => {
@@ -152,7 +166,7 @@ export class FlowchartComponent {
       activity.metadata.designer.position.x = outNode.x;
       activity.metadata.designer.position.y = outNode.y;
 
-      this.updateActivity({id: activity.id, originalId: activity.id, activity: activity});
+      this.updateActivity({ id: activity.id, originalId: activity.id, activity: activity });
     });
 
     this.updateGraphInternal(flowchartModel.activities, flowchartModel.connections);
@@ -162,8 +176,8 @@ export class FlowchartComponent {
   @Method()
   async addActivity(args: AddActivityArgs): Promise<Activity> {
     const graph = this.graph;
-    const {descriptor, x, y} = args;
-    let id = args.id ?? await this.generateUniqueActivityName(descriptor);
+    const { descriptor, x, y } = args;
+    let id = args.id ?? (await this.generateUniqueActivityName(descriptor));
     const point: PointLike = graph.pageToLocal(x, y);
     const sx = point.x;
     const sy = point.y;
@@ -177,14 +191,14 @@ export class FlowchartComponent {
         designer: {
           position: {
             x: sx,
-            y: sy
-          }
-        }
+            y: sy,
+          },
+        },
       },
     };
 
     const nodeMetadata = this.nodeFactory.createNode(descriptor, activity, sx, sy);
-    graph.addNode(nodeMetadata, {merge: true});
+    graph.addNode(nodeMetadata, { merge: true });
     const node = graph.getNodes().find(n => n.data.id == nodeMetadata.activity.id);
     adjustPortMarkupByNode(node);
     await this.updateModel();
@@ -200,9 +214,8 @@ export class FlowchartComponent {
     const nodeShape = node as ActivityNodeShape;
 
     if (!!node) {
-
       // Update the node's data with the activity.
-      nodeShape.setData(activity, {overwrite: true});
+      nodeShape.setData(activity, { overwrite: true });
 
       // Updating the node's activity property to trigger a rerender.
       nodeShape.activity = activity;
@@ -233,11 +246,10 @@ export class FlowchartComponent {
     const activity = args.activity;
     const node = this.graph.getNodes().find(x => x.data.id == originalId) as ActivityNodeShape;
 
-    if (!node)
-      return;
+    if (!node) return;
 
     // Update the node's data with the activity.
-    node.setData(activity, {overwrite: true});
+    node.setData(activity, { overwrite: true });
 
     // Update the node's activity property to trigger a rerender.
     node.activity = activity;
@@ -276,7 +288,7 @@ export class FlowchartComponent {
   private async editChildActivity(e: CustomEvent<EditChildActivityArgs>) {
     const portName = e.detail.port.name;
     const activityId = e.detail.parentActivityId;
-    const item: FlowchartPathItem = {activityId, portName};
+    const item: FlowchartPathItem = { activityId, portName };
 
     // Push child prop path.
     this.path = [...this.path, item];
@@ -321,12 +333,14 @@ export class FlowchartComponent {
       metadata: {},
       variables: [],
       customProperties: {},
-      canStartWorkflow: false
+      canStartWorkflow: false,
     };
-  }
+  };
 
   private createAndInitializeGraph = async () => {
-    const graph = this.graph = createGraph(this.container, {
+    const graph = (this.graph = createGraph(
+      this.container,
+      {
         nodeMovable: () => this.interactiveMode,
         edgeMovable: () => this.interactiveMode,
         arrowheadMovable: () => this.interactiveMode,
@@ -339,7 +353,8 @@ export class FlowchartComponent {
         vertexDeletable: () => this.interactiveMode,
         vertexMovable: () => this.interactiveMode,
       },
-      this.getAllActivities);
+      this.getAllActivities,
+    ));
 
     graph.on('blank:click', this.onGraphClick);
     graph.on('node:selected', this.onNodeSelected);
@@ -355,7 +370,7 @@ export class FlowchartComponent {
     graph.on('edge:connected', this.onGraphChanged);
 
     await this.updateLayout();
-  }
+  };
 
   private getCurrentActivity = (): Activity => {
     const activityLookup = this.activityLookup;
@@ -384,16 +399,16 @@ export class FlowchartComponent {
   private resolvePort = (activity: Activity, portName: string): Flowchart => {
     const portProvider = this.portProviderRegistry.get(activity.type);
     const activityDescriptor = descriptorsStore.activityDescriptors.find(x => x.typeName == activity.type);
-    const childActivity = portProvider.resolvePort(portName, {activity: activity, activityDescriptor});
+    const childActivity = portProvider.resolvePort(portName, { activity: activity, activityDescriptor });
     return childActivity as Flowchart;
   };
 
   private setPort = (owner: Activity, portName: string, child: Flowchart) => {
     const portProvider = this.portProviderRegistry.get(owner.type);
     const activityDescriptor = descriptorsStore.activityDescriptors.find(x => x.typeName == owner.type);
-    portProvider.assignPort(portName, child, {activity: owner, activityDescriptor});
+    portProvider.assignPort(portName, child, { activity: owner, activityDescriptor });
     this.updateLookups();
-  }
+  };
 
   private updateModel = async () => {
     const model = this.getFlowchartModel();
@@ -402,13 +417,14 @@ export class FlowchartComponent {
     currentFlowchart.connections = model.connections;
     currentFlowchart.start = model.start;
     this.updateLookups();
-  }
+  };
 
   private exportInternal = (): Activity => {
     return this.rootActivity;
-  }
+  };
 
-  private getActivityDescriptor = (typeName: string, version: number): ActivityDescriptor => descriptorsStore.activityDescriptors.find(x => x.typeName == typeName && x.version == version);
+  private getActivityDescriptor = (typeName: string, version: number): ActivityDescriptor =>
+    descriptorsStore.activityDescriptors.find(x => x.typeName == typeName && x.version == version);
 
   private setupGraph = async (flowchart: Flowchart) => {
     const activities = flowchart.activities;
@@ -424,10 +440,12 @@ export class FlowchartComponent {
   private updateGraphInternal = (activities: Array<Activity>, connections: Array<Connection>) => {
     const edges: Array<Edge.Metadata> = [];
 
+    console.log(activities);
+
     // Create an X6 node for each activity.
-    const nodes: Array<Node.Metadata> = activities.map(activity => {
-      const position = activity.metadata.designer?.position || {x: 100, y: 100};
-      const {x, y} = position;
+    const nodes: Array<Node.Metadata> = activities?.map(activity => {
+      const position = activity.metadata.designer?.position || { x: 100, y: 100 };
+      const { x, y } = position;
       const descriptor = this.getActivityDescriptor(activity.type, activity.version);
       return this.nodeFactory.createNode(descriptor, activity, x, y);
     });
@@ -438,15 +456,15 @@ export class FlowchartComponent {
       edges.push(edge);
     }
 
-    const model: FromJSONData = {nodes, edges};
+    const model: FromJSONData = { nodes, edges };
 
     // Freeze then unfreeze prevents an error from occurring when importing JSON a second time (e.g. after loading a new workflow.
     this.graph.freeze();
-    this.graph.fromJSON(model, {silent: false});
+    this.graph.fromJSON(model, { silent: false });
     this.graph.unfreeze();
     rebuildGraph(this.graph);
     this.graph.scrollToContent();
-  }
+  };
 
   private getFlowchartModel = (): FlowchartModel => {
     const graph = this.graph;
@@ -464,7 +482,7 @@ export class FlowchartComponent {
     return {
       activities,
       connections,
-      start: startActivity?.id
+      start: startActivity?.id,
     };
   };
 
@@ -476,9 +494,9 @@ export class FlowchartComponent {
       source: connection.source.activity,
       target: connection.target.activity,
       sourcePort: connection.source.port,
-      targetPort: connection.target.port
+      targetPort: connection.target.port,
     };
-  }
+  };
 
   private syncEdgeData = (cachedActivityId: string, updatedActivity: Activity) => {
     const graph = this.graph;
@@ -487,14 +505,11 @@ export class FlowchartComponent {
     for (const edge of edges) {
       const connection: Connection = edge.data;
 
-      if (connection.target.activity != cachedActivityId && connection.source.activity != cachedActivityId)
-        continue;
+      if (connection.target.activity != cachedActivityId && connection.source.activity != cachedActivityId) continue;
 
-      if (connection.target.activity == cachedActivityId)
-        connection.target.activity = updatedActivity.id;
+      if (connection.target.activity == cachedActivityId) connection.target.activity = updatedActivity.id;
 
-      if (connection.source.activity == cachedActivityId)
-        connection.source.activity = updatedActivity.id;
+      if (connection.source.activity == cachedActivityId) connection.source.activity = updatedActivity.id;
 
       edge.data = connection;
     }
@@ -505,7 +520,7 @@ export class FlowchartComponent {
     const activityNodes = flatten(graph);
     this.activities = activityNodes.map(x => x.activity);
     this.activityLookup = createActivityLookup(activityNodes);
-  }
+  };
 
   private generateUniqueActivityName = async (activityDescriptor: ActivityDescriptor): Promise<string> => {
     return await generateUniqueActivityName(this.activities, activityDescriptor);
@@ -517,7 +532,7 @@ export class FlowchartComponent {
     const currentFlowchart = await this.getCurrentFlowchartActivity();
 
     const args: ContainerSelectedArgs = {
-      activity: currentFlowchart
+      activity: currentFlowchart,
     };
 
     return this.containerSelected.emit(args);
@@ -547,19 +562,20 @@ export class FlowchartComponent {
         handler: () => this.onToggleCanStartWorkflowClicked(node),
         isToggle: true,
         checked: activity.canStartWorkflow,
-
-      }, {
+      },
+      {
         text: 'Cut',
-        handler: () => this.onCutActivityClicked(node)
+        handler: () => this.onCutActivityClicked(node),
       },
       {
         text: 'Copy',
-        handler: () => this.onCopyActivityClicked(node)
-
-      }, {
+        handler: () => this.onCopyActivityClicked(node),
+      },
+      {
         text: 'Delete',
-        handler: () => this.onDeleteActivityClicked(node)
-      }];
+        handler: () => this.onDeleteActivityClicked(node),
+      },
+    ];
 
     this.activityContextMenu.menuItems = this.isReadonly ? [] : menuItems;
     const localPos = this.graph.localToClient(e.x, e.y);
@@ -568,12 +584,12 @@ export class FlowchartComponent {
     this.activityContextMenu.style.left = `${e.x - scroll.left}px`;
 
     await this.activityContextMenu.open();
-  }
+  };
 
   private onNodeMoved = (e: PositionEventArgs<JQuery.ClickEvent>) => {
     const node = e.node as ActivityNodeShape;
     const activity = node.data as Activity;
-    const nodePosition = node.position({relative: false});
+    const nodePosition = node.position({ relative: false });
 
     activity.metadata = {
       ...activity.metadata,
@@ -581,13 +597,13 @@ export class FlowchartComponent {
         ...activity.metadata.designer,
         position: {
           x: nodePosition.x,
-          y: nodePosition.y
-        }
-      }
-    }
-  }
+          y: nodePosition.y,
+        },
+      },
+    };
+  };
 
-  private onEdgeConnected = async (e: { isNew: boolean, edge: Edge }) => {
+  private onEdgeConnected = async (e: { isNew: boolean; edge: Edge }) => {
     const edge = e.edge;
     const sourceNode = edge.getSourceNode();
     const targetNode = edge.getTargetNode();
@@ -599,12 +615,12 @@ export class FlowchartComponent {
     const connection: Connection = {
       source: {
         activity: sourceActivity.id,
-        port: sourcePort
+        port: sourcePort,
       },
       target: {
         activity: targetActivity.id,
-        port: targetPort
-      }
+        port: targetPort,
+      },
     };
 
     edge.data = connection;
@@ -616,20 +632,20 @@ export class FlowchartComponent {
       targetNode,
       sourceActivity,
       targetActivity,
-      edge
-    }
+      edge,
+    };
 
     await this.eventBus.emit(FlowchartEvents.ConnectionCreated, this, eventArgs);
-  }
+  };
 
   private onGraphChanged = async (e: any) => {
     await this.updateModel();
     this.graphUpdated.emit();
-  }
+  };
 
   private onNodeRemoved = async (e: any) => {
     const activity = e.node.data as Activity;
-    this.activityDeleted.emit({activity});
+    this.activityDeleted.emit({ activity });
     await this.onGraphChanged(e);
   };
 
@@ -637,10 +653,10 @@ export class FlowchartComponent {
     const node = e.node as any;
 
     if (!node.isClone) {
-      const activity = {...node.getData()} as Activity;
+      const activity = { ...node.getData() } as Activity;
       const activityDescriptor = this.getActivityDescriptor(activity.type, activity.version);
-      activity.id = await this.generateUniqueActivityName(activityDescriptor)
-      node.activity = {...activity};
+      activity.id = await this.generateUniqueActivityName(activityDescriptor);
+      node.activity = { ...activity };
     }
 
     await this.onGraphChanged(e);
@@ -649,27 +665,25 @@ export class FlowchartComponent {
   private onToggleCanStartWorkflowClicked = (node: ActivityNodeShape) => {
     const activity = node.data as Activity;
     activity.canStartWorkflow = !activity.canStartWorkflow;
-    node.activity = {...activity};
+    node.activity = { ...activity };
   };
 
   private onDeleteActivityClicked = (node: ActivityNodeShape) => {
     let cells = this.graph.getSelectedCells();
 
-    if (cells.length == 0)
-      cells = [node];
+    if (cells.length == 0) cells = [node];
 
     this.graph.removeCells(cells);
 
     for (const cell of cells) {
       const activity = node.data as Activity;
-      this.activityDeleted.emit({activity: activity});
+      this.activityDeleted.emit({ activity: activity });
     }
   };
   private onCopyActivityClicked = (node: ActivityNodeShape) => {
     let cells = this.graph.getSelectedCells();
 
-    if (cells.length == 0)
-      cells = [node];
+    if (cells.length == 0) cells = [node];
 
     this.graph.copy(cells);
   };
@@ -677,14 +691,13 @@ export class FlowchartComponent {
   private onCutActivityClicked = (node: ActivityNodeShape) => {
     let cells = this.graph.getSelectedCells();
 
-    if (cells.length == 0)
-      cells = [node];
+    if (cells.length == 0) cells = [node];
 
     this.graph.cut(cells);
 
     for (const cell of cells) {
       const activity = node.data as Activity;
-      this.activityDeleted.emit({activity: activity});
+      this.activityDeleted.emit({ activity: activity });
     }
   };
 
@@ -698,7 +711,7 @@ export class FlowchartComponent {
 
     await this.setupGraph(childFlowchart);
     await this.scrollToStart();
-  }
+  };
 
   private updatePorts = (node: any, activity: Activity) => {
     const descriptor = this.getActivityDescriptor(activity.type, activity.version);
@@ -708,36 +721,26 @@ export class FlowchartComponent {
     const addedPorts = desiredPorts.filter(x => !actualPorts.some(y => getPortNameByPortId(y.id) == getPortNameByPortId(x.id)));
     const removedPorts = actualPorts.filter(x => !desiredPorts.some(y => getPortNameByPortId(y.id) == getPortNameByPortId(x.id)));
 
-    if (addedPorts.length > 0)
-      node.addPorts(addedPorts);
+    if (addedPorts.length > 0) node.addPorts(addedPorts);
 
-    if (removedPorts.length > 0)
-      node.removePorts(removedPorts);
-
+    if (removedPorts.length > 0) node.removePorts(removedPorts);
   };
 
   render() {
-
     const path = this.path;
 
     const state: FlowchartState = {
-      nodeMap: this.activityLookup
-    }
+      nodeMap: this.activityLookup,
+    };
 
     return (
       <FlowchartTunnel.Provider state={state}>
-        <div class="tw-relative">
+        <div class="tw-relative ">
           <div class="tw-absolute tw-left-0 tw-top-3 tw-z-10">
-            <elsa-workflow-navigator items={path} rootActivity={this.rootActivity} onNavigate={this.onNavigateHierarchy}/>
+            <elsa-workflow-navigator items={path} rootActivity={this.rootActivity} onNavigate={this.onNavigateHierarchy} />
           </div>
-          <div
-            class="tw-absolute tw-left-0 tw-top-0 tw-right-0 tw-bottom-0"
-            ref={el => this.container = el}>
-          </div>
-          <elsa-context-menu ref={el => this.activityContextMenu = el}
-                             hideButton={true}
-                             anchorPoint={ContextMenuAnchorPoint.TopLeft}
-                             class="tw-absolute"/>
+          <div class="tw-absolute tw-left-0 tw-top-0 tw-right-0 tw-bottom-0 " ref={el => (this.container = el)}></div>
+          <elsa-context-menu ref={el => (this.activityContextMenu = el)} hideButton={true} anchorPoint={ContextMenuAnchorPoint.TopLeft} class="tw-absolute" />
         </div>
       </FlowchartTunnel.Provider>
     );

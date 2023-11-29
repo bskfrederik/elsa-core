@@ -1,11 +1,11 @@
-import {getVersionOptionsString, serializeQueryString} from '../../../utils';
-import {InputDefinition, WorkflowDefinition, WorkflowDefinitionSummary, WorkflowOptions} from "../models/entities";
-import {Activity, PagedList, Variable, VersionedEntity, VersionOptions} from "../../../models";
-import {Service} from "typedi";
-import {AxiosResponse} from "axios";
-import {removeGuidsFromPortNames, addGuidsToPortNames} from '../../../utils/graph';
-import {cloneDeep} from '@antv/x6/lib/util/object/object';
-import {ElsaClientProvider} from "../../../services";
+import { getVersionOptionsString, serializeQueryString } from '../../../utils';
+import { InputDefinition, WorkflowDefinition, WorkflowDefinitionSummary, WorkflowOptions } from '../models/entities';
+import { Activity, PagedList, Variable, VersionedEntity, VersionOptions } from '../../../models';
+import { Service } from 'typedi';
+import { AxiosResponse } from 'axios';
+import { removeGuidsFromPortNames, addGuidsToPortNames } from '../../../utils/graph';
+import { cloneDeep } from '@antv/x6/lib/util/object/object';
+import { ElsaClientProvider } from '../../../services';
 
 @Service()
 export class WorkflowDefinitionsApi {
@@ -17,7 +17,15 @@ export class WorkflowDefinitionsApi {
 
   async publish(request: PublishWorkflowDefinitionRequest): Promise<WorkflowDefinition> {
     const httpClient = await this.getHttpClient();
-    const response = await httpClient.post<WorkflowDefinition>(`workflow-definitions/${request.definitionId}/publish`);
+    const response = await httpClient.post<WorkflowDefinition>(`workflow-definitions/${request.definitionId}/publish`, request);
+    return response.data;
+  }
+
+  async execute(definitionId: string): Promise<any> {
+    const httpClient = await this.getHttpClient();
+    const response = await httpClient.post<WorkflowDefinition>(`workflow-definitions/${definitionId}/execute`, {
+      definitionId: definitionId,
+    });
     return response.data;
   }
 
@@ -62,7 +70,7 @@ export class WorkflowDefinitionsApi {
     const queryString = {};
 
     if (!!request.versionOptions) queryString['versionOptions'] = getVersionOptionsString(request.versionOptions);
-    if(request.includeCompositeRoot === true) queryString['includeCompositeRoot'] = true;
+    if (request.includeCompositeRoot === true) queryString['includeCompositeRoot'] = true;
 
     const queryStringText = serializeQueryString(queryString);
     const httpClient = await this.getHttpClient();
@@ -149,7 +157,7 @@ export class WorkflowDefinitionsApi {
     // To be deleted after the connection model on backend is updated.
     addGuidsToPortNames(workflowDefinition.root);
 
-    return {workflowDefinition: workflowDefinition};
+    return { workflowDefinition: workflowDefinition };
   }
 
   async deleteMany(request: DeleteManyWorkflowDefinitionRequest): Promise<DeleteManyWorkflowDefinitionResponse> {
@@ -185,7 +193,6 @@ export class WorkflowDefinitionsApi {
   private getHttpClient = async () => await this.provider.getHttpClient();
 }
 
-
 export interface SaveWorkflowDefinitionRequest {
   model: WorkflowDefinition;
   publish: boolean;
@@ -195,14 +202,11 @@ export interface BaseManyWorkflowDefinitionRequest {
   definitionIds: string[];
 }
 
-export interface DeleteManyWorkflowDefinitionRequest extends BaseManyWorkflowDefinitionRequest {
-}
+export interface DeleteManyWorkflowDefinitionRequest extends BaseManyWorkflowDefinitionRequest {}
 
-export interface PublishManyWorkflowDefinitionRequest extends BaseManyWorkflowDefinitionRequest {
-}
+export interface PublishManyWorkflowDefinitionRequest extends BaseManyWorkflowDefinitionRequest {}
 
-export interface UnpublishManyWorkflowDefinitionRequest extends BaseManyWorkflowDefinitionRequest {
-}
+export interface UnpublishManyWorkflowDefinitionRequest extends BaseManyWorkflowDefinitionRequest {}
 
 export interface DeleteWorkflowDefinitionRequest {
   definitionId: string;
@@ -253,7 +257,7 @@ export interface ImportWorkflowResponse {
 
 export enum WorkflowDefinitionsOrderBy {
   Name = 'Name',
-  Created = 'Created',
+  Created = 'Created'
 }
 
 export interface ListWorkflowDefinitionsRequest {

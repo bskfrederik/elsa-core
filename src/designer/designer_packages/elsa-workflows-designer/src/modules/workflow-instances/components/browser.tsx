@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Host, Method, Prop, State} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, h, Host, Method, Prop, State} from '@stencil/core';
 import _ from 'lodash';
 import {Search} from "./search";
 import {Filter, FilterProps} from "./filter";
@@ -13,6 +13,7 @@ import {formatTimestamp} from "../../../utils";
 import {DeleteIcon, EditIcon} from "../../../components/icons/tooling";
 import {PagerData} from "../../../components/shared/pager/pager";
 import {DefaultContents, DefaultModalActions, ModalDialogService, ModalType} from '../../../components/shared/modal-dialog';
+import { getLocaleComponentStrings } from '../../../utils/locale';
 
 @Component({
   tag: 'elsa-workflow-instance-browser',
@@ -52,7 +53,12 @@ export class WorkflowInstanceBrowser {
   @State() private selectedSubStatus?: WorkflowSubStatus;
   @State() private orderBy?: OrderBy;
 
+
+  @Element() element: HTMLElement;
+  strings!: any;
+
   async componentWillLoad() {
+    this.strings = await getLocaleComponentStrings(this.element);
     var persistedRequest = getRequest()
 
     if (persistedRequest) {
@@ -79,13 +85,19 @@ export class WorkflowInstanceBrowser {
     const totalCount = workflowInstances.totalCount
 
     const filterProps: FilterProps = {
+      resetText: this.strings.resetText,
+      bulkText: this.strings.bulkText,
+      bulkDeleteText: this.strings.bulkDeleteText,
+      bulkCancelText: this.strings.bulkCancelText,
       pageSizeFilter: {
         selectedPageSize: this.currentPageSize,
-        onChange: this.onPageSizeChanged
+        onChange: this.onPageSizeChanged,
+        pageSizeText: this.strings.pageSizes,
       },
       orderByFilter: {
         selectedOrderBy: this.orderBy,
-        onChange: this.onOrderByChanged
+        onChange: this.onOrderByChanged,
+        orderByText: this.strings.orderBy,
       },
       statusFilter: {
         selectedStatus: this.selectedStatus,
@@ -98,7 +110,8 @@ export class WorkflowInstanceBrowser {
       workflowFilter: {
         workflows: publishedOrLatestWorkflows,
         selectedWorkflowDefinitionId: this.selectedWorkflowDefinitionId,
-        onChange: this.onWorkflowChanged
+        onChange: this.onWorkflowChanged,
+        workflowText: this.strings.allWorkflows
       },
       resetFilter: async () => {
         this.resetPagination();
@@ -118,9 +131,9 @@ export class WorkflowInstanceBrowser {
       <Host class="tw-block">
 
         <div class="tw-pt-4">
-          <h2 class="tw-text-lg tw-font-medium tw-ml-4 tw-mb-2">Workflow Instances</h2>
+          <h2 class="tw-text-lg tw-font-medium tw-ml-4 tw-mb-2">{this.strings.name}</h2>
 
-          <Search onSearch={this.onSearch}/>
+          <Search onSearch={this.onSearch} searchTextPlaceholder={this.strings.searchTextPlaceholder}/>
           <Filter {...filterProps}/>
 
           <div class="tw-align-middle tw-inline-block tw-min-w-full tw-border-b tw-border-gray-200">
@@ -132,14 +145,14 @@ export class WorkflowInstanceBrowser {
                          onChange={e => this.onSelectAllCheckChange(e)}
                          ref={el => this.selectAllCheckbox = el}/>
                 </th>
-                <th><span class="lg:tw-pl-2">ID</span></th>
-                <th>Correlation</th>
-                <th>Workflow</th>
-                <th class="tw-text-center">Version</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th>Finished</th>
+                <th><span class="lg:tw-pl-2">{this.strings.id}</span></th>
+                <th>{this.strings.correlation}</th>
+                <th>{this.strings.worfklow}</th>
+                <th class="tw-align-right">{this.strings.version}</th>
+                <th>{this.strings.workflowName}</th>
+                <th>{this.strings.status}</th>
+                <th>{this.strings.created}</th>
+                <th>{this.strings.finished}</th>
                 <th/>
               </tr>
               </thead>
@@ -163,7 +176,7 @@ export class WorkflowInstanceBrowser {
 
                     <td>{workflowInstance.correlationId}</td>
                     <td>{workflowName}</td>
-                    <td class="tw-text-center">{workflowInstance.version}</td>
+                    <td class="tw-align-right">{workflowInstance.version}</td>
                     <td>{workflowInstance.name}</td>
                     <td>
                       <div class="tw-flex tw-items-center tw-space-x-3 lg:tw-pl-2">

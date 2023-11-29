@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Method, Prop, State} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, h, Method, Prop, State} from '@stencil/core';
 import {camelCase} from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Activity, ActivityDescriptor, ActivityInput, ActivityKind, ActivityOutput, Expression, InputDescriptor, OutputDescriptor, PropertyDescriptor, TabChangedArgs, TabDefinition, Variable} from '../../../../models';
@@ -12,6 +12,7 @@ import {ActivityPropertyPanelEvents, ActivityUpdatedArgs, DeleteActivityRequeste
 import InputControlSwitchContextState from "../../../../components/shared/input-control-switch/state";
 import {OutputDefinition} from "../../models/entities";
 import {RenderActivityInputContext, RenderActivityPropsContext} from "../models";
+import { getLocaleComponentStrings } from '../../../../utils/locale';
 
 @Component({
   tag: 'elsa-activity-properties-editor',
@@ -46,7 +47,11 @@ export class ActivityPropertiesEditor {
     await this.slideOverPanel.hide();
   }
 
+  @Element() element: HTMLElement;
+  strings!: any;
+
   async componentWillRender() {
+    this.strings = await getLocaleComponentStrings(this.element);
     const activity = this.activity;
     const activityDescriptor = this.findActivityDescriptor();
     const title = activityDescriptor?.displayName ?? activityDescriptor?.typeName ?? 'Unknown Activity';
@@ -107,13 +112,13 @@ export class ActivityPropertiesEditor {
     const isTask = activityDescriptor.kind == ActivityKind.Task;
 
     const commonTab: TabDefinition = {
-      displayText: 'General',
+      displayText: this.strings.generalTab,
       order: 0,
       content: () => this.renderCommonTab()
     };
 
     const inputTab: TabDefinition = {
-      displayText: 'Settings',
+      displayText: this.strings.settingsTab,
       order: 10,
       content: () => this.renderInputTab()
     };
@@ -122,7 +127,7 @@ export class ActivityPropertiesEditor {
 
     if (activityDescriptor.outputs.length > 0) {
       const outputTab: TabDefinition = {
-        displayText: 'Output',
+        displayText: this.strings.outputTab,
         order: 11,
         content: () => this.renderOutputTab()
       };
@@ -132,7 +137,7 @@ export class ActivityPropertiesEditor {
 
     if (isTask) {
       const taskTab: TabDefinition = {
-        displayText: 'Task',
+        displayText: this.strings.taskTab,
         order: 12,
         content: () => this.renderTaskTab()
       };
@@ -240,6 +245,8 @@ export class ActivityPropertiesEditor {
     const isWrapped = inputDescriptor.isWrapped;
     const camelCasePropertyName = camelCase(propertyName);
 
+    console.log(propertyName, propertyValue, syntax)
+
     if (isWrapped) {
       let input: ActivityInput = activity[camelCasePropertyName];
 
@@ -289,6 +296,8 @@ export class ActivityPropertiesEditor {
     const activity = this.activity;
     const activityId = activity.id;
 
+    console.log(`Activity ${activityId} updated.`);
+
     this.activityUpdated.emit({
       newId: activityId,
       originalId: activityId,
@@ -305,15 +314,15 @@ export class ActivityPropertiesEditor {
     const key = `${activityId}`;
 
     return <div key={key}>
-      <FormEntry fieldId="ActivityId" label="ID" hint="The ID of the activity.">
+      <FormEntry fieldId="ActivityId" label={this.strings.activityId} hint={this.strings.activityHint}>
         <input type="text" name="ActivityId" id="ActivityId" value={activityId} onChange={e => this.onActivityIdChanged(e)}/>
       </FormEntry>
 
-      <FormEntry fieldId="ActivityDisplayText" label="Display Text" hint="The text to display on the activity in the designer.">
+      <FormEntry fieldId="ActivityDisplayText" label={this.strings.activityDisplayText} hint={this.strings.activityDisplayHint}>
         <input type="text" name="ActivityDisplayText" id="ActivityDisplayText" value={displayText} onChange={e => this.onActivityDisplayTextChanged(e)}/>
       </FormEntry>
 
-      <CheckboxFormEntry fieldId="CanStartWorkflow" label="Can start workflow" hint="When enabled, this activity can be used as a trigger to automatically start the workflow.">
+      <CheckboxFormEntry fieldId="CanStartWorkflow" label={this.strings.activityCanStartWorkflow} hint={this.strings.activityCanStartWorkflowHint}>
         <input type="checkbox" name="CanStartWorkflow" id="CanStartWorkflow" value={"true"} checked={canStartWorkflow} onChange={e => this.onCanStartWorkflowChanged(e)}/>
       </CheckboxFormEntry>
 
@@ -321,6 +330,7 @@ export class ActivityPropertiesEditor {
   };
 
   private renderInputTab = () => {
+    console.log('renderInputTab');
     const {activity, inputs} = this.renderContext;
     const activityId = activity.id;
     const key = `${activityId}`;
@@ -328,6 +338,7 @@ export class ActivityPropertiesEditor {
     return <div key={key}>
       {inputs.filter(x => !!x.inputControl).map(propertyContext => {
         const key = `${activity.id}-${propertyContext.inputContext.inputDescriptor.name}`;
+        console.log(key)
         return <div key={key}>
           {propertyContext.inputControl}
         </div>;
@@ -400,7 +411,7 @@ export class ActivityPropertiesEditor {
     const key = `${activityId}:task`;
 
     return <div key={key}>
-      <CheckboxFormEntry fieldId="RunAsynchronously" label="Execute asynchronously" hint="When enabled, this activity will execute asynchronously and suspend workflow execution until the activity is finished.">
+      <CheckboxFormEntry fieldId="RunAsynchronously" label={this.strings.taskExecuteAsynchronously} hint={this.strings.taskExecuteAsynchronouslyHint}>
         <input type="checkbox" name="RunAsynchronously" id="RunAsynchronously" value={"true"} checked={runAsynchronously} onChange={e => this.onRunAsynchronouslyChanged(e)}/>
       </CheckboxFormEntry>
     </div>

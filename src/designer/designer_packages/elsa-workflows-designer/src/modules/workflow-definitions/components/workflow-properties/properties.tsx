@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Method, Prop, State, Watch} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, h, Method, Prop, State, Watch} from '@stencil/core';
 import {Container} from "typedi";
 import {EventBus} from "../../../../services";
 import {InputDefinition, OutputDefinition, WorkflowDefinition, WorkflowOptions} from "../../models/entities";
@@ -10,6 +10,7 @@ import {TabChangedArgs, Variable} from "../../../../models";
 import {WorkflowDefinitionsApi} from "../../services/api";
 import descriptorsStore from "../../../../data/descriptors-store";
 import {WorkflowPropertiesEditorTabs} from "../../models/props-editor-tabs";
+import { getLocaleComponentStrings } from '../../../../utils/locale';
 
 @Component({
   tag: 'elsa-workflow-definition-properties-editor',
@@ -37,6 +38,9 @@ export class WorkflowDefinitionPropertiesEditor {
   @Event() revertVersionClicked: EventEmitter<WorkflowDefinition>;
   @State() private model: WorkflowPropertiesEditorModel;
   @State() private selectedTabIndex: number = 0;
+  @Element() element: HTMLElement;
+  strings!: any;
+
 
   @Method()
   public async show(): Promise<void> {
@@ -59,6 +63,7 @@ export class WorkflowDefinitionPropertiesEditor {
   }
 
   async componentWillLoad() {
+    this.strings = await getLocaleComponentStrings(this.element);
     await this.createModel();
   }
 
@@ -101,7 +106,7 @@ export class WorkflowDefinitionPropertiesEditor {
         name: 'workflowName',
         content: () => {
           const workflow = this.workflowDefinition;
-          return <FormEntry label="Name" fieldId="workflowName" hint="The name of the workflow.">
+          return <FormEntry label={this.strings.propertiesWorkflowName} fieldId="workflowName" hint={this.strings.propertiesWorkflowNameHint}>
             <input type="text" name="workflowName" id="workflowName" value={workflow.name} onChange={e => this.onPropertyEditorChanged(wf => wf.name = (e.target as HTMLInputElement).value)}/>
           </FormEntry>;
         },
@@ -110,7 +115,7 @@ export class WorkflowDefinitionPropertiesEditor {
         name: 'workflowDescription',
         content: () => {
           const workflow = this.workflowDefinition;
-          return <FormEntry label="Description" fieldId="workflowDescription" hint="A brief description about the workflow.">
+          return <FormEntry label={this.strings.propertiesWorkflowDescription} fieldId="workflowDescription" hint={this.strings.propertiesWorkflowDescriptionHint}>
             <textarea name="workflowDescription" id="workflowDescription" value={workflow.description} rows={6} onChange={e => this.onPropertyEditorChanged(wf => wf.description = (e.target as HTMLTextAreaElement).value)}/>
           </FormEntry>;
         },
@@ -121,11 +126,11 @@ export class WorkflowDefinitionPropertiesEditor {
           const workflow = this.workflowDefinition;
 
           const workflowDetails = {
-            'Definition ID': isNullOrWhitespace(workflow.definitionId) ? '(new)' : workflow.definitionId,
-            'Version ID': isNullOrWhitespace(workflow.id) ? '(new)' : workflow.id,
-            'Version': workflow.version.toString(),
-            'Status': workflow.isPublished ? 'Published' : 'Draft',
-            'Readonly': workflow.isReadonly ? 'Yes' : 'No'
+            [this.strings.propertiesDefitionId]: isNullOrWhitespace(workflow.definitionId) ? this.strings.propertiesNew : workflow.definitionId,
+            [this.strings.propertiesVersionId]: isNullOrWhitespace(workflow.id) ? this.strings.propertiesNew : workflow.id,
+            [this.strings.propertiesVersion]: workflow.version.toString(),
+            [this.strings.propertiesStatus]: workflow.isPublished ? this.strings.propertiesPublished : this.strings.propertiesDraft,
+            [this.strings.propertiesReadOnly]: workflow.isReadonly ? this.strings.propertiesYes : this.strings.propertiesNo
           };
 
           return <InfoList title="Information" dictionary={workflowDetails}/>;
@@ -135,7 +140,7 @@ export class WorkflowDefinitionPropertiesEditor {
     };
 
     propertiesTabModel.tab = {
-      displayText: 'Properties',
+      displayText: this.strings.propertiesTab,
       order: 0,
       content: () => this.renderPropertiesTab(propertiesTabModel)
     };
@@ -143,7 +148,7 @@ export class WorkflowDefinitionPropertiesEditor {
     const variablesTabModel: TabModel = {
       name: 'variables',
       tab: {
-        displayText: 'Variables',
+        displayText: this.strings.variablesTab,
         order: 5,
         content: () => this.renderVariablesTab()
       }
@@ -157,7 +162,7 @@ export class WorkflowDefinitionPropertiesEditor {
       {
         name: 'workflowActivationValidator',
         order: 0,
-        content: () => <FormEntry label="Activation Strategy" fieldId="workflowActivationStrategyType" hint={defaultDescription}>
+        content: () => <FormEntry label={this.strings.settingsActivitationStrategy} fieldId="workflowActivationStrategyType" hint={defaultDescription}>
           <select name="workflowActivationStrategyType" onChange={e => this.onPropertyEditorChanged(wf => {
             const selectElement = (e.target as HTMLSelectElement);
             options.activationStrategyType = selectElement.value;
@@ -174,7 +179,7 @@ export class WorkflowDefinitionPropertiesEditor {
       {
         name: 'usableAsActivity',
         order: 0,
-        content: () => <CheckboxFormEntry label="Usable As Activity" fieldId="UsableAsActivity" hint="Allow this workflow to be used as an activity.">
+        content: () => <CheckboxFormEntry label={this.strings.settingsUsableAsActivity} fieldId="UsableAsActivity" hint={this.strings.settingsUsableAsActivityHint}>
           <input type="checkbox" id="UsableAsActivity" name="UsableAsActivity" checked={usableAsActivity} onChange={e => this.onPropertyEditorChanged(wf => {
             const inputElement = (e.target as HTMLInputElement);
             wf.options.usableAsActivity = inputElement.checked;
@@ -186,7 +191,7 @@ export class WorkflowDefinitionPropertiesEditor {
         name: 'autoUpdateConsumingWorkflows',
         order: 0,
         content: () =>
-          <CheckboxFormEntry fieldId="UpdateConsumingWorkflows" label="Auto-update consuming workflows" hint="When you publish a new version, all of the consuming workflows will be updated to point to the new version of this workflow.">
+          <CheckboxFormEntry fieldId="UpdateConsumingWorkflows" label={this.strings.settingsAutoUpdateConsumingWorkflows} hint={this.strings.settingsAutoUpdateConsumingWorkflowsHint}>
             <input type="checkbox" name="UpdateConsumingWorkflows" id="UpdateConsumingWorkflows" checked={autoUpdateConsumingWorkflows} onChange={e => this.onPropertyEditorChanged(wf => {
               const inputElement = e.target as HTMLInputElement;
               options.autoUpdateConsumingWorkflows = inputElement.checked;
@@ -199,7 +204,7 @@ export class WorkflowDefinitionPropertiesEditor {
     const settingsTabModel: TabModel = {
       name: 'settings',
       tab: {
-        displayText: 'Settings',
+        displayText: this.strings.settingsTab,
         order: 10,
         content: () => <elsa-widgets widgets={settingsWidgets}/>
       }
@@ -208,7 +213,7 @@ export class WorkflowDefinitionPropertiesEditor {
     const inputOutputTabModel: TabModel = {
       name: 'input-output',
       tab: {
-        displayText: 'Input/output',
+        displayText: this.strings.inputOutputTab,
         order: 15,
         content: () => this.renderInputOutputTab()
       }
@@ -217,7 +222,7 @@ export class WorkflowDefinitionPropertiesEditor {
     const versionHistoryTabModel: TabModel = {
       name: 'versionHistory',
       tab: {
-        displayText: 'Version History',
+        displayText: this.strings.versionHistoryTab,
         order: 20,
         content: () => this.renderVersionHistoryTab()
       }

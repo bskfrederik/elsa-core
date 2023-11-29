@@ -1,0 +1,8 @@
+{
+  "saveAction": "Save",
+  "columName": "Name",
+  "columnType": "Type",
+  "columStorage": "Storage",
+  "variableEditButton": "Edit",
+  "variableDeleteButton": "Delete"
+}

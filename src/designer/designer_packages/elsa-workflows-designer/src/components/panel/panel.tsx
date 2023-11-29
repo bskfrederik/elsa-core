@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, h, Host, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Prop, State } from '@stencil/core';
 import { PanelPosition, PanelStateChangedArgs } from './models';
 import { applyResize } from './resize';
 
@@ -10,6 +10,9 @@ export class Panel {
   @Prop() position: PanelPosition = PanelPosition.Left;
   @Event() expandedStateChanged: EventEmitter<PanelStateChangedArgs>;
   @State() isExpanded: boolean = true;
+
+  @Element() element: HTMLElement;
+
   dragging = false;
 
   private onToggleClick = () => {

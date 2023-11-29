@@ -1,10 +1,11 @@
-import {Component, h, Prop, Event, EventEmitter, Method} from "@stencil/core";
+import {Component, h, Prop, Event, EventEmitter, Method, Element} from "@stencil/core";
 import {groupBy} from 'lodash';
 import {StorageDriverDescriptor, Variable} from "../../../../models";
 import {generateIdentity, isNullOrWhitespace} from "../../../../utils";
 import descriptorsStore from '../../../../data/descriptors-store';
 import {VariableDescriptor} from "../../../../services/api-client/variable-descriptors-api";
 import {CheckboxFormEntry, FormEntry} from "../../../../components/shared/forms/form-entry";
+import { getLocaleComponentStrings } from "../../../../utils/locale";
 
 @Component({
   tag: 'elsa-variable-editor-dialog-content',
@@ -21,6 +22,14 @@ export class VariableEditorDialogContent {
     return this.getVariableInternal(this.formElement);
   }
 
+  @Element() element: HTMLElement;
+  strings!: any;
+
+  async componentWillLoad() {
+    this.strings = await getLocaleComponentStrings(this.element);
+    console.log(this.strings)
+  }
+
   render() {
     const variable: Variable = this.variable ?? {id: '', name: '', typeName: 'Object', isArray: false};
     const variableTypeName = variable.typeName;
@@ -32,14 +41,14 @@ export class VariableEditorDialogContent {
       <div>
         <form ref={el => this.formElement = el} class="tw-h-full tw-flex tw-flex-col tw-bg-white" onSubmit={e => this.onSubmit(e)} method="post">
           <div class="tw-pt-4">
-            <h2 class="tw-text-lg tw-font-medium tw-ml-4 tw-mb-2">Edit Variable</h2>
+            <h2 class="tw-text-lg tw-font-medium tw-ml-4 tw-mb-2">{this.strings.editVariable}</h2>
             <div class="tw-align-middle tw-inline-block tw-min-w-full tw-border-b tw-border-gray-200">
 
-              <FormEntry fieldId="variableName" label="Name" hint="The technical name of the variable.">
+              <FormEntry fieldId="variableName" label={this.strings.labelName} hint={this.strings.nameHint}>
                 <input type="text" name="variableName" id="variableName" value={variable.name}/>
               </FormEntry>
 
-              <FormEntry fieldId="variableTypeName" label="Type" hint="The type of the variable.">
+              <FormEntry fieldId="variableTypeName" label={this.strings.labelType} hint={this.strings.typeHint}>
                 <select id="variableTypeName" name="variableTypeName">
                   {Object.keys(groupedVariableTypes).map(category => {
                     const variableTypes = groupedVariableTypes[category] as Array<VariableDescriptor>;
@@ -50,15 +59,15 @@ export class VariableEditorDialogContent {
                 </select>
               </FormEntry>
 
-              <CheckboxFormEntry fieldId="variableIsArray" label="This variable is an array" hint="Check if the variable holds an array of the selected type.">
+              <CheckboxFormEntry fieldId="variableIsArray" label={this.strings.labelArray} hint={this.strings.arrayHint}>
                 <input type="checkbox" name="variableIsArray" id="variableIsArray" value="true" checked={variable.isArray}/>
               </CheckboxFormEntry>
 
-              <FormEntry fieldId="variableValue" label="Value" hint="The value of the variable.">
+              <FormEntry fieldId="variableValue" label={this.strings.labelValue} hint={this.strings.valueHint}>
                 <input type="text" name="variableValue" id="variableValue" value={variable.value}/>
               </FormEntry>
 
-              <FormEntry fieldId="variableStorageDriverId" label="Storage" hint="The storage to use when persisting the variable.">
+              <FormEntry fieldId="variableStorageDriverId" label={this.strings.labelStorage} hint={this.strings.storageHint}>
                 <select id="variableStorageDriverTypeName" name="variableStorageDriverTypeName">
                   {storageDrivers.map(driver => {
                     const value = driver.typeName;

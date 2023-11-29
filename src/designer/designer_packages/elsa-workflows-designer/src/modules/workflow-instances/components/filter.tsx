@@ -11,22 +11,29 @@ export interface FilterProps extends BulkActionsProps {
   subStatusFilter: SubStatusFilterProps;
   orderByFilter: OrderByFilterProps;
   resetFilter: () => void;
+  resetText: string;
+
 }
 
 export interface BulkActionsProps {
   onBulkDelete: () => void;
   onBulkCancel: () => void;
+  bulkText: string;
+  bulkDeleteText: string;
+  bulkCancelText: string;
 }
 
 export interface PageSizeFilterProps {
   selectedPageSize: number;
   onChange: (pageSize: number) => void;
+  pageSizeText: string;
 }
 
 export interface WorkflowFilterProps {
   workflows: Array<WorkflowDefinitionSummary>;
   selectedWorkflowDefinitionId?: string;
   onChange: (definitionId: string) => void;
+  workflowText: string;
 }
 
 export interface StatusFilterProps {
@@ -42,20 +49,22 @@ export interface SubStatusFilterProps {
 export interface OrderByFilterProps {
   selectedOrderBy?: OrderBy;
   onChange: (orderBy: OrderBy) => void;
+  orderByText: string;
+
 }
 
-export const Filter: FunctionalComponent<FilterProps> = ({pageSizeFilter, workflowFilter, statusFilter, subStatusFilter, orderByFilter, resetFilter, onBulkDelete, onBulkCancel}) => {
+export const Filter: FunctionalComponent<FilterProps> = ({pageSizeFilter, workflowFilter, statusFilter, subStatusFilter, orderByFilter, resetFilter, onBulkDelete, onBulkCancel, bulkText, bulkDeleteText, bulkCancelText, resetText}) => {
 
   return <div class="tw-p-8 tw-flex tw-content-end tw-justify-right tw-bg-white tw-space-x-4">
     <div class="tw-flex-shrink-0">
-      <BulkActions onBulkDelete={onBulkDelete} onBulkCancel={onBulkCancel} />
+      <BulkActions onBulkDelete={onBulkDelete} onBulkCancel={onBulkCancel} bulkText={bulkText} bulkDeleteText={bulkDeleteText} bulkCancelText={bulkCancelText} />
     </div>
     <div class="tw-flex-1">
       &nbsp;
     </div>
 
     <button onClick={resetFilter} type="button" class="tw-text-sm tw-text-blue-600 active:tw-text-blue-700 tw-px-3 active:ring tw-ring-blue-500 tw-rounded">
-      Reset
+      {resetText}
     </button>
 
     <PageSizeFilter {...pageSizeFilter}/>
@@ -66,12 +75,12 @@ export const Filter: FunctionalComponent<FilterProps> = ({pageSizeFilter, workfl
   </div>;
 }
 
-const BulkActions: FunctionalComponent<BulkActionsProps> = ({ onBulkDelete, onBulkCancel }) => {
+const BulkActions: FunctionalComponent<BulkActionsProps> = ({ onBulkDelete, onBulkCancel, bulkText, bulkDeleteText, bulkCancelText }) => {
   const bulkActions = [{
-    text: 'Delete',
+    text: bulkDeleteText,
     name: 'Delete',
   }, {
-    text: 'Cancel',
+    text: bulkCancelText,
     name: 'Cancel',
   }];
 
@@ -91,14 +100,14 @@ const BulkActions: FunctionalComponent<BulkActionsProps> = ({ onBulkDelete, onBu
   };
 
   return <elsa-dropdown-button
-    text="Bulk Actions" items={bulkActions} icon={<BulkActionsIcon/>}
+    text={bulkText} items={bulkActions} icon={<BulkActionsIcon/>}
     origin={DropdownButtonOrigin.TopLeft}
     theme="Secondary"
     onItemSelected={onBulkActionSelected}/>
 }
 
-const PageSizeFilter: FunctionalComponent<PageSizeFilterProps> = ({selectedPageSize, onChange}) => {
-  const selectedPageSizeText = `Page size: ${selectedPageSize}`;
+const PageSizeFilter: FunctionalComponent<PageSizeFilterProps> = ({selectedPageSize, onChange, pageSizeText}) => {
+  const selectedPageSizeText = `${pageSizeText}: ${selectedPageSize}`;
   const pageSizes: Array<number> = [5, 10, 15, 20, 30, 50, 100];
 
   const items: Array<DropdownButtonItem> = pageSizes.map(x => {
@@ -115,12 +124,12 @@ const PageSizeFilter: FunctionalComponent<PageSizeFilterProps> = ({selectedPageS
     onItemSelected={onPageSizeChanged}/>
 }
 
-const WorkflowFilter: FunctionalComponent<WorkflowFilterProps> = ({workflows, selectedWorkflowDefinitionId, onChange}) => {
+const WorkflowFilter: FunctionalComponent<WorkflowFilterProps> = ({workflows, selectedWorkflowDefinitionId, onChange, workflowText}) => {
   const selectedWorkflow = workflows.find(x => x.definitionId == selectedWorkflowDefinitionId);
   const getWorkflowName = (workflow?: WorkflowDefinitionSummary) => workflow?.name?.length > 0 ? workflow.name : 'Untitled';
-  const selectedWorkflowText = !selectedWorkflowDefinitionId ? 'All workflows' : getWorkflowName(selectedWorkflow);
+  const selectedWorkflowText = !selectedWorkflowDefinitionId ? workflowText : getWorkflowName(selectedWorkflow);
   let items: Array<DropdownButtonItem> = workflows.map(x => ({text: getWorkflowName(x), value: x.definitionId, isSelected: x.definitionId == selectedWorkflowDefinitionId}));
-  const allItem: DropdownButtonItem = {text: 'All', value: null, isSelected: !selectedWorkflowDefinitionId};
+  const allItem: DropdownButtonItem = {text: workflowText, value: null, isSelected: !selectedWorkflowDefinitionId};
   const onWorkflowChanged = (e: CustomEvent<DropdownButtonItem>) => onChange(e.detail.value);
 
   items = [allItem, ...items];
@@ -158,8 +167,8 @@ const SubStatusFilter: FunctionalComponent<SubStatusFilterProps> = ({selectedSta
     onItemSelected={onStatusChanged}/>
 }
 
-const OrderByFilter: FunctionalComponent<OrderByFilterProps> = ({selectedOrderBy, onChange}) => {
-  const selectedOrderByText = !!selectedOrderBy ? `Ordered by: ${selectedOrderBy}` : 'Order by';
+const OrderByFilter: FunctionalComponent<OrderByFilterProps> = ({selectedOrderBy, onChange, orderByText}) => {
+  const selectedOrderByText = !!selectedOrderBy ? `${orderByText}: ${selectedOrderBy}` : orderByText;
   const orderByValues: Array<OrderBy> = [OrderBy.Finished, OrderBy.Updated, OrderBy.Created];
   const items: Array<DropdownButtonItem> = orderByValues.map(x => ({text: x, value: x, isSelected: x == selectedOrderBy}));
   const onOrderByChanged = (e: CustomEvent<DropdownButtonItem>) => onChange(e.detail.value);

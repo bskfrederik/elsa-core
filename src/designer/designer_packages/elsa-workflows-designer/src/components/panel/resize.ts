@@ -35,15 +35,20 @@ function updatePanelDefaultSize(position: PanelPosition, size: number) {
 
 export function applyResize({ position, isDefault, isHide, size }: ApplyResizeParams) {
   const root = document.querySelector<HTMLElement>(':root');
-
   if (isHide) {
     root.style.setProperty(positionToCssVariable[position], '1px');
     return;
   }
 
   if (isDefault) {
+    if (position < 0) position = position * -1;
     root.style.setProperty(positionToCssVariable[position], `${getPanelDefaultSize(position)}px`);
     return;
+  }
+
+  if (size < 0) {
+    const flowChart = document.querySelector<HTMLElement>('elsa-flowchart');
+    size = window.innerHeight + size - flowChart.getBoundingClientRect().y + 55;
   }
 
   root.style.setProperty(positionToCssVariable[position], `${size}px`);

@@ -1,4 +1,4 @@
-import {Component, h, Prop, State, Watch, Event, EventEmitter, Method} from "@stencil/core";
+import {Component, h, Prop, State, Watch, Event, EventEmitter, Method, Element} from "@stencil/core";
 import {Activity, Workflow, WorkflowExecutionLogRecord, WorkflowInstance} from "../../../models";
 import {Container} from "typedi";
 import {ActivityIconRegistry, ActivityNode, flatten, walkActivities} from "../../../services";
@@ -7,6 +7,7 @@ import {ActivityExecutionEventBlock, WorkflowJournalModel} from "../models";
 import {ActivityIconSize} from "../../../components/icons/activities";
 import {WorkflowInstancesApi} from "../services/workflow-instances-api";
 import {JournalItemSelectedArgs} from "../events";
+import { getLocaleComponentStrings } from "../../../utils/locale";
 
 // TODO: Implement dynamic loading of records.
 const PAGE_SIZE: number = 10000;
@@ -39,7 +40,11 @@ export class Journal {
       await this.refresh();
   }
 
+  @Element() element: HTMLElement;
+  strings!: any;
+
   async componentWillLoad(): Promise<void> {
+    this.strings = await getLocaleComponentStrings(this.element);
     await this.refresh();
   }
 
@@ -61,7 +66,7 @@ export class Journal {
               <div class="tw-flex tw-items-start tw-justify-between tw-space-x-3">
                 <div class="tw-space-y-1">
                   <h2 class="tw-text-lg tw-font-medium tw-text-gray-900">
-                    Workflow Journal
+                    {this.strings.worfklowJournal}
                   </h2>
                 </div>
               </div>
@@ -74,10 +79,10 @@ export class Journal {
                   <thead>
                   <tr>
                     <th class="tw-w-1"/>
-                    <th>Time</th>
-                    <th class="tw-min-w-full">Activity</th>
-                    <th>Status</th>
-                    <th>Duration</th>
+                    <th>{this.strings.time}</th>
+                    <th class="tw-min-w-full">{this.strings.activity}</th>
+                    <th>{this.strings.status}</th>
+                    <th>{this.strings.duration}</th>
                   </tr>
                   </thead>
 

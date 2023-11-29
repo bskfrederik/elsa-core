@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Method, Prop, State, Watch} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, h, Method, Prop, State, Watch} from '@stencil/core';
 import {TabChangedArgs, Variable, WorkflowInstance} from '../../../models';
 import {InfoList} from "../../../components/shared/forms/info-list";
 import {formatTimestamp, isNullOrWhitespace} from "../../../utils";
@@ -6,6 +6,7 @@ import {PropertiesTabModel, TabModel, WorkflowInstancePropertiesDisplayingArgs, 
 import {Container} from "typedi";
 import {EventBus} from "../../../services";
 import {WorkflowDefinition} from "../../workflow-definitions/models/entities";
+import { getLocaleComponentStrings } from '../../../utils/locale';
 
 @Component({
   tag: 'elsa-workflow-instance-properties',
@@ -28,6 +29,10 @@ export class WorkflowDefinitionPropertiesEditor {
   @State() private selectedTabIndex: number = 0;
   @State() private changeHandle: object = {};
 
+  @Element() element: HTMLElement;
+  strings!: any;
+
+
   @Method()
   public async show(): Promise<void> {
     await this.slideOverPanel.show();
@@ -49,6 +54,7 @@ export class WorkflowDefinitionPropertiesEditor {
   }
 
   async componentWillLoad() {
+    this.strings = await getLocaleComponentStrings(this.element);
     await this.createModel();
   }
 
@@ -89,26 +95,26 @@ export class WorkflowDefinitionPropertiesEditor {
         content: () => {
 
           const identityDetails = {
-            'Instance ID': isNullOrWhitespace(workflowInstance.id) ? '(new)' : workflowInstance.id,
-            'Definition ID': isNullOrWhitespace(workflowDefinition.definitionId) ? '(new)' : workflowDefinition.definitionId,
-            'Version': workflowDefinition.version.toString(),
+            [this.strings.propertiesTabInstanceId]: isNullOrWhitespace(workflowInstance.id) ? this.strings.propertiesNew : workflowInstance.id,
+            [this.strings.propertiesTabDefinitionId]: isNullOrWhitespace(workflowDefinition.definitionId) ? this.strings.propertiesNew : workflowDefinition.definitionId,
+            [this.strings.propertiesTabVersion]: workflowDefinition.version.toString(),
           };
 
           const statusDetails = {
-            'Status': workflowInstance.status,
-            'Sub status': workflowInstance.subStatus
+            [this.strings.propertiesTabStatus]: workflowInstance.status,
+            [this.strings.propertiesTabSubStatus]: workflowInstance.subStatus
           };
 
           const timestampDetails = {
-            'Created': formatTimestamp(workflowInstance.createdAt),
-            'Last execution': formatTimestamp(workflowInstance.updatedAt),
-            'Finished': formatTimestamp(workflowInstance.finishedAt),
+            [this.strings.propertiesTabCreated]: formatTimestamp(workflowInstance.createdAt),
+            [this.strings.propertiesTabLastExecution]: formatTimestamp(workflowInstance.updatedAt),
+            [this.strings.propertiesTabFinished]: formatTimestamp(workflowInstance.finishedAt),
           };
 
           return <div>
-            <InfoList title="Identity" dictionary={identityDetails}/>
-            <InfoList title="Status" dictionary={statusDetails}/>
-            <InfoList title="Timestamps" dictionary={timestampDetails} hideEmptyValues={true}/>
+            <InfoList title={this.strings.propertiesTab} dictionary={identityDetails}/>
+            <InfoList title={this.strings.propertiesTabStatus} dictionary={statusDetails}/>
+            <InfoList title={this.strings.propertiesTabTimeStamps} dictionary={timestampDetails} hideEmptyValues={true}/>
           </div>;
         },
         order: 10
@@ -116,14 +122,14 @@ export class WorkflowDefinitionPropertiesEditor {
     };
 
     propertiesTabModel.tab = {
-      displayText: 'Properties',
+      displayText: this.strings.propertiesTab,
       content: () => this.renderPropertiesTab(propertiesTabModel)
     };
 
     const variablesTabModel: TabModel = {
       name: 'variables',
       tab: {
-        displayText: 'Variables',
+        displayText: this.strings.variablesTab,
         content: () => this.renderVariablesTab()
       }
     }

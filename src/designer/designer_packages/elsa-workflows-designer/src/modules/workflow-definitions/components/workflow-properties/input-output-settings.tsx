@@ -1,10 +1,11 @@
-import {Component, Event, EventEmitter, h, Prop, State, Watch} from "@stencil/core";
+import {Component, Element, Event, EventEmitter, h, Prop, State, Watch} from "@stencil/core";
 import descriptorsStore from "../../../../data/descriptors-store";
 import {Container} from "typedi";
 import {ModalActionClickArgs, ModalActionDefinition, ModalActionType, ModalDialogInstance, ModalDialogService} from "../../../../components/shared/modal-dialog";
 import {InputDefinition, OutputDefinition} from "../../models/entities";
 import {DeleteIcon, EditIcon} from "../../../../components/icons/tooling";
 import {FormEntry} from "../../../../components/shared/forms/form-entry";
+import { getLocaleComponentStrings } from "../../../../utils/locale";
 
 @Component({
   tag: 'elsa-workflow-definition-input-output-settings',
@@ -15,6 +16,11 @@ export class InputOutputSettings {
   private readonly inputSaveAction: ModalActionDefinition;
   private readonly outputSaveAction: ModalActionDefinition;
   private modalDialogInstance: ModalDialogInstance;
+
+  @Element() element: HTMLElement;
+  strings!: any;
+
+
 
   constructor() {
     this.modalDialogService = Container.get(ModalDialogService);
@@ -55,7 +61,8 @@ export class InputOutputSettings {
     this.outputsState = !!this.outputs ? [...this.outputs] : [];
   }
 
-  componentWillLoad() {
+  async componentWillLoad() {
+    this.strings = await getLocaleComponentStrings(this.element);
     this.onInputsPropChanged(this.inputs);
     this.onOutputsPropChanged(this.outputs);
   }
@@ -76,14 +83,14 @@ export class InputOutputSettings {
 
     return <div>
       <div class="tw-p-4">
-        <h3 class="tw-text-base tw-leading-6 tw-font-medium tw-text-gray-900">Inputs</h3>
+        <h3 class="tw-text-base tw-leading-6 tw-font-medium tw-text-gray-900">{this.strings.inputsLabel}</h3>
       </div>
       <div class="tw-align-middle tw-inline-block tw-min-w-full tw-border-b tw-border-gray-200">
         <table class="default-table">
           <thead>
           <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Type</th>
+            <th scope="col">{this.strings.inputName}</th>
+            <th scope="col">{this.strings.inputType}</th>
             <th scope="col"/>
           </tr>
           </thead>
@@ -100,8 +107,8 @@ export class InputOutputSettings {
                   <td class="tw-pr-6">
                     <elsa-context-menu
                       menuItems={[
-                        {text: 'Edit', handler: e => this.onEditInputClick(e, input), icon: <EditIcon/>},
-                        {text: 'Delete', handler: e => this.onDeleteInputClick(e, input), icon: <DeleteIcon/>},
+                        {text: this.strings.editButton, handler: e => this.onEditInputClick(e, input), icon: <EditIcon/>},
+                        {text: this.strings.deleteButton, handler: e => this.onDeleteInputClick(e, input), icon: <DeleteIcon/>},
                       ]}
                     />
                   </td>
@@ -112,7 +119,7 @@ export class InputOutputSettings {
         </table>
       </div>
       <div class="tw-flex tw-justify-end tw-m-4">
-        <button class="elsa-btn elsa-btn-primary" onClick={e => this.onAddInputClick()}>Add input parameter</button>
+        <button class="elsa-btn elsa-btn-primary" onClick={e => this.onAddInputClick()}>{this.strings.addInputButton}</button>
       </div>
     </div>
   };
@@ -122,14 +129,14 @@ export class InputOutputSettings {
 
     return <div>
       <div class="tw-p-4">
-        <h3 class="tw-text-base tw-leading-6 tw-font-medium tw-text-gray-900">Outputs</h3>
+        <h3 class="tw-text-base tw-leading-6 tw-font-medium tw-text-gray-900">{this.strings.outputLabel}</h3>
       </div>
       <div class="tw-align-middle tw-inline-block tw-min-w-full tw-border-b tw-border-gray-200">
         <table class="default-table">
           <thead>
           <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Type</th>
+            <th scope="col">{this.strings.outputName}</th>
+            <th scope="col">{this.strings.outputType}</th>
             <th scope="col"/>
           </tr>
           </thead>
@@ -146,8 +153,8 @@ export class InputOutputSettings {
                   <td class="tw-pr-6">
                     <elsa-context-menu
                       menuItems={[
-                        {text: 'Edit', handler: e => this.onEditOutputClick(e, output), icon: <EditIcon/>},
-                        {text: 'Delete', handler: e => this.onDeleteOutputClick(e, output), icon: <DeleteIcon/>},
+                        {text: this.strings.editButton, handler: e => this.onEditOutputClick(e, output), icon: <EditIcon/>},
+                        {text: this.strings.deleteButton, handler: e => this.onDeleteOutputClick(e, output), icon: <DeleteIcon/>},
                       ]}
                     />
                   </td>
@@ -158,7 +165,7 @@ export class InputOutputSettings {
         </table>
       </div>
       <div class="tw-flex tw-justify-end tw-m-4">
-        <button class="elsa-btn elsa-btn-primary" onClick={e => this.onAddOutputClick()}>Add output parameter</button>
+        <button class="elsa-btn elsa-btn-primary" onClick={e => this.onAddOutputClick()}>{this.strings.addOutputButton}</button>
       </div>
     </div>
   };
@@ -168,10 +175,10 @@ export class InputOutputSettings {
 
     return <div>
       <div class="tw-p-4">
-        <h3 class="tw-text-base tw-leading-6 tw-font-medium tw-text-gray-900">Outcomes</h3>
+        <h3 class="tw-text-base tw-leading-6 tw-font-medium tw-text-gray-900">{this.strings.labelOutcome}</h3>
       </div>
-      <FormEntry label="" fieldId="WorkflowDefinitionOutcomes" hint="Enter a list of possible outcomes for this workflow.">
-        <elsa-input-tags placeHolder="Add outcome" values={outcomes} onValueChanged={e => this.onOutcomesChanged(e.detail)}/>
+      <FormEntry label="" fieldId="WorkflowDefinitionOutcomes" hint={this.strings.outcomeHint}>
+        <elsa-input-tags placeHolder={this.strings.placeholderOutcome} values={outcomes} onValueChanged={e => this.onOutcomesChanged(e.detail)}/>
       </FormEntry>
     </div>
   };
